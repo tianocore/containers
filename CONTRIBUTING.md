@@ -5,8 +5,9 @@ instructions to get started contributing.
 
 ## Issues
 
-The containers issues are tracked through the associated [github issues](https://github.com/tianocore/containers/issues) page. Please be sure to include a detailed description of the
-bug or requested feature as well as relevant steps to reproduce any issues.
+The containers issues are tracked through the associated [github issues](https://github.com/tianocore/containers/issues)
+page. Please be sure to include a detailed description of the bug or requested
+feature as well as relevant steps to reproduce any issues.
 
 ## Code Contributions
 
