@@ -18,7 +18,7 @@ please follow the below process.
 1. Contributor opens an issue describing problem or new desired functionality
 2. Contributor forks repository in github
 3. Contributor creates branch for work in their fork
-4. Contributor makes code changes and write documentation
+4. Contributor makes code changes and writes documentation
 5. Contributor runs tests locally
 6. Contributor submits PR to main branch of tianocore/containers
     1. PR reviewers will provide feedback on change.  If any modifications are
