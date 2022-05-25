@@ -9,7 +9,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/fedora-36
+  BUILD_IMAGE: ghcr.io/${{ github.repository }}/fedora-36-build
+  TEST_IMAGE: ghcr.io/${{ github.repository }}/fedora-36-test
 
 jobs:
   build-and-push-image:
@@ -29,20 +30,20 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=sha,format=short
-          flavor: |
-            latest=true
+      - name: Set tag
+        run: echo "short_sha=$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_ENV
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: ${{ github.ref == 'refs/heads/main' }}    # Do not push if this is a pull request
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+      - name: Build
+        run: |
+          docker build --target build --tag "${BUILD_IMAGE}:${short_sha}" - < Dockerfile
+          docker build --target test --tag "${TEST_IMAGE}:${short_sha}" - < Dockerfile
+        shell: bash
+
+      - name: Push
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: |
+          docker push "${BUILD_IMAGE}:${short_sha}"
+          docker push "${TEST_IMAGE}:${short_sha}"
+        shell: bash
+
+
