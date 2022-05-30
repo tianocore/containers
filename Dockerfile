@@ -1,3 +1,20 @@
+# Dockerfile for building container images for use in the EDK2 CI.
+#
+# Copyright (C) 2022, Red Hat, Inc.
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+#
+# This file contains the definitions for images to be used for different
+# jobs in the EDK2 CI pipeline. The set of tools and dependencies is split into
+# multiple images to reduce the overall download size by providing images 
+# tailored to the task of the CI job. Currently there are two images: "build"
+# and "test".
+# The images are indented to run on x86_64.
+
+
+# Build Image
+# This image is intended for jobs that compile the source code and as a general
+# purpose image. It contains the toolchains for all supported architectures, and
+# all build dependencies.
 FROM registry.fedoraproject.org/fedora-minimal:36 AS build
 RUN microdnf \
       --assumeyes \
@@ -27,6 +44,10 @@ ENV GCC5_ARM_PREFIX     /usr/bin/arm-linux-gnu-
 ENV GCC5_RISCV64_PREFIX /usr/bin/riscv64-linux-gnu-
 
 
+# Test Image
+# This image is indented for jobs that run tests (and possibly also build)
+# firmware images. It is based on the build image and adds Qemu for the
+# architectures under test.
 FROM build AS test
 RUN microdnf \
       --assumeyes \
@@ -36,5 +57,4 @@ RUN microdnf \
         qemu-system-aarch64-core \
         qemu-system-arm-core \
         qemu-system-x86-core
-
 
