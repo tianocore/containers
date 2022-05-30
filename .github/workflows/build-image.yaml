@@ -1,3 +1,8 @@
+# GitHub workflow file to generate Docker images automatically.
+#
+# Copyright (C) 2022, Red Hat, Inc.
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+
 name: "Build Docker Image"
 
 on:
