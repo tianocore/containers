@@ -1,0 +1,54 @@
+# GitHub workflow file to generate Docker images automatically.
+#
+# Copyright (C) 2022, Red Hat, Inc.
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+
+name: "Build Docker Image"
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  REGISTRY: ghcr.io
+  BUILD_IMAGE: ghcr.io/${{ github.repository }}/fedora-36-build
+  TEST_IMAGE: ghcr.io/${{ github.repository }}/fedora-36-test
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set tag
+        run: echo "short_sha=$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_ENV
+
+      - name: Build
+        run: |
+          docker build --target build --tag "${BUILD_IMAGE}:${short_sha}" - < Dockerfile
+          docker build --target test --tag "${TEST_IMAGE}:${short_sha}" - < Dockerfile
+        shell: bash
+
+      - name: Push
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: |
+          docker push "${BUILD_IMAGE}:${short_sha}"
+          docker push "${TEST_IMAGE}:${short_sha}"
+        shell: bash
+
+
