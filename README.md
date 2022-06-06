@@ -5,19 +5,31 @@ test Edk2 based UEFI firmware code projects. This repository contains the
 dockerfiles and the github workflow files to generate these container images.
 Container images are automatically build and uploaded to the associated github
 container registry. Links to the container registry for the various images can
-be found in [current status](## Current_Status).
+be found in [current status](#Current-Status).
 
 ## Current Status
 
-| Image Name | OS SKU | Build Status | Package |
-| :--------- | :----- | :----- | :----- |
-| TODO | TODO | BADGE | [link](https://github.com/osteffenrh/edk2-containers/pkgs/container/edk2-containers%2Ffedora-36) |
+| Image Name | OS SKU | Type | Build Status |
+| :--------- | :----- | :--- | :----------- |
+| [fedora-35-build](https://github.com/tianocore/containers/pkgs/container/containers%2Ffedora-35-build) | Fedora 35 | Build | [![Build Docker Image](https://github.com/tianocore/containers/actions/workflows/build-image.yaml/badge.svg)](https://github.com/tianocore/containers/actions/workflows/build-image.yaml) |
+| [fedora-35-test](https://github.com/tianocore/containers/pkgs/container/containers%2Ffedora-35-test) | Fedora 35 | Test | [![Build Docker Image](https://github.com/tianocore/containers/actions/workflows/build-image.yaml/badge.svg)](https://github.com/tianocore/containers/actions/workflows/build-image.yaml) |
 
-## Containers
+## Container Types
 
-### Container#1
+Containers will be broken up into the following types based on their intended
+use. Additional types may be added in the future to accommodate new use cases.
 
-TODO: Describe the individual containers intended use.
+### Build
+
+Build images will only have a minimal set of tools intended to be used for
+building the firmware projects. They will not contain virtualization or other
+tools used for testing or development.
+
+### Test
+
+Usually built on top of a corresponding build image, test images will additionally
+contain tools and packages used for testing the firmware. For example, test images
+will contain QEMU for testing a virtualized platform.
 
 ## License
 
