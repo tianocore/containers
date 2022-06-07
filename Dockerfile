@@ -15,7 +15,7 @@
 # This image is intended for jobs that compile the source code and as a general
 # purpose image. It contains the toolchains for all supported architectures, and
 # all build dependencies.
-FROM registry.fedoraproject.org/fedora-minimal:36 AS build
+FROM registry.fedoraproject.org/fedora-minimal:35 AS build
 RUN microdnf \
       --assumeyes \
       --nodocs \
