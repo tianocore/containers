@@ -47,8 +47,13 @@ jobs:
       - name: Push
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
+          docker tag "${BUILD_IMAGE}:${short_sha}" "${BUILD_IMAGE}:latest"
           docker push "${BUILD_IMAGE}:${short_sha}"
+          docker push "${BUILD_IMAGE}:latest"
+
+          docker tag "${TEST_IMAGE}:${short_sha}" "${TEST_IMAGE}:latest"
           docker push "${TEST_IMAGE}:${short_sha}"
+          docker push "${TEST_IMAGE}:latest"
         shell: bash
 
 
