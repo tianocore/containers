@@ -22,7 +22,7 @@ RUN microdnf \
       --setopt=install_weak_deps=0 \
       install \
         acpica-tools \
-        g++ \
+        gcc-c++\
         gcc \
         gcc-aarch64-linux-gnu \
         gcc-arm-linux-gnu \
