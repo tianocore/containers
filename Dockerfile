@@ -18,13 +18,12 @@
 FROM registry.fedoraproject.org/fedora-minimal:35 AS build
 ENV GCC_VERSION=11.2.1-1.fc35
 ENV NASM_VERSION=2.15.05-1.fc35
-ENV PYTHON_VERSION=3.9
+ENV PYTHON_VERSION=3.10
 RUN microdnf \
       --assumeyes \
       --nodocs \
       --setopt=install_weak_deps=0 \
       install \
-        acpica-tools \
         gcc-c++-${GCC_VERSION} \
         gcc-${GCC_VERSION} \
         gcc-aarch64-linux-gnu-${GCC_VERSION} \
