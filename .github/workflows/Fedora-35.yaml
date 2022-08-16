@@ -1,0 +1,18 @@
+name: "Fedora 35 Image"
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'Fedora-35/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'Fedora-35/**'
+
+jobs:
+  Build_Image:
+    uses: ./.github/workflows/build-image.yaml
+    with:
+      name: "Fedora-35"
