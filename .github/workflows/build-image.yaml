@@ -1,21 +1,32 @@
-# GitHub workflow file to generate Docker images automatically.
-#
-# Copyright (C) 2022, Red Hat, Inc.
+# GitHub Actions Workflow for building and pushing Docker images
+
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 
-name: "Build Docker Image"
+# This workflow is intended to be called from another top-level
+# workflow. Each set of images (defined in a common Dockerfile)
+# should have a matching top-level workflow yaml file.
+
+
+name: "Build and Push images"
 
 on:
-  workflow_dispatch:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_call:
+    inputs:
+      image_name:
+        type: string
+        required: true
+        description: "Name of the image to build (= folder name)"
+      sub_images:
+        type: string
+        required: false
+        description: "Space-separated list of sub-image names. Can not be empty."
+        default: "build"
 
 env:
   REGISTRY: ghcr.io
-  BUILD_IMAGE: ghcr.io/${{ github.repository }}/fedora-35-build
-  TEST_IMAGE: ghcr.io/${{ github.repository }}/fedora-35-test
+  REPOSITORY: ${{ github.repository }}
+  IMAGE_NAME: ${{ inputs.image_name }}
+  SUB_IMAGES: ${{ inputs.sub_images }}
 
 jobs:
   build-and-push-image:
@@ -40,20 +51,24 @@ jobs:
 
       - name: Build
         run: |
-          docker build --target build --tag "${BUILD_IMAGE}:${short_sha}" - < Dockerfile
-          docker build --target test --tag "${TEST_IMAGE}:${short_sha}" - < Dockerfile
+          cd "${IMAGE_NAME}"
+          for sub in $SUB_IMAGES; do
+            IMG=$(tr '[:upper:]' '[:lower:]' <<< "${REGISTRY}/${REPOSITORY}/${IMAGE_NAME}-${sub}")
+            echo "Building Image: ${IMG}:${short_sha}..."
+            docker build --target "${sub}" --tag "${IMG}:${short_sha}" - < Dockerfile
+          done
         shell: bash
 
       - name: Push
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
-          docker tag "${BUILD_IMAGE}:${short_sha}" "${BUILD_IMAGE}:latest"
-          docker push "${BUILD_IMAGE}:${short_sha}"
-          docker push "${BUILD_IMAGE}:latest"
-
-          docker tag "${TEST_IMAGE}:${short_sha}" "${TEST_IMAGE}:latest"
-          docker push "${TEST_IMAGE}:${short_sha}"
-          docker push "${TEST_IMAGE}:latest"
+          for sub in $SUB_IMAGES; do
+            IMG=$(tr '[:upper:]' '[:lower:]' <<< "${REGISTRY}/${REPOSITORY}/${IMAGE_NAME}-${sub}")
+            echo "Pushing Image: ${IMG}:${short_sha}..."
+            docker tag "${IMG}:${short_sha}" "${IMG}:latest"
+            docker push "${IMG}:${short_sha}"
+            docker push "${IMG}:latest"
+          done
         shell: bash
 
 
