@@ -6,7 +6,7 @@ name: "Windows 2022 Images"
 
 # This workflow only runs (on the main branch or on PRs targeted
 # at the main branch) and if files inside the Windows-2022 directory
-# have been modifed/added/removed...
+# have been modified/added/removed...
 
 on:
   workflow_dispatch:
@@ -25,4 +25,4 @@ jobs:
       with:
         image_name: "Windows-2022"
         sub_images: "build"
-
+        runs_on: "windows-latest"
