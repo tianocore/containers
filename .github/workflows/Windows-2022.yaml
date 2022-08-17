@@ -1,0 +1,28 @@
+# GitHub Action Workflow for building the Windows 2022 images.
+
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+
+name: "Windows 2022 Images"
+
+# This workflow only runs (on the main branch or on PRs targeted
+# at the main branch) and if files inside the Windows-2022 directory
+# have been modifed/added/removed...
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'Windows-2022/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'Windows-2022/**'
+
+jobs:
+  Build_Image:
+      uses: ./.github/workflows/build-image.yaml
+      with:
+        image_name: "Windows-2022"
+        sub_images: "build"
+
