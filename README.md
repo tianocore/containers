@@ -11,8 +11,9 @@ be found in [current status](#Current-Status).
 
 | Image Name | OS SKU | Type | Build Status |
 | :--------- | :----- | :--- | :----------- |
-| [fedora-35-build](https://github.com/tianocore/containers/pkgs/container/containers%2Ffedora-35-build) | Fedora 35 | Build | [![Build Docker Image](https://github.com/tianocore/containers/actions/workflows/build-image.yaml/badge.svg)](https://github.com/tianocore/containers/actions/workflows/build-image.yaml) |
-| [fedora-35-test](https://github.com/tianocore/containers/pkgs/container/containers%2Ffedora-35-test) | Fedora 35 | Test | [![Build Docker Image](https://github.com/tianocore/containers/actions/workflows/build-image.yaml/badge.svg)](https://github.com/tianocore/containers/actions/workflows/build-image.yaml) |
+| [fedora-35-build](https://github.com/tianocore/containers/pkgs/container/containers%2Ffedora-35-build) | Fedora 35 | Build | [![Fedora 35 Images](https://github.com/tianocore/containers/actions/workflows/Fedora-35.yaml/badge.svg)](https://github.com/tianocore/containers/actions/workflows/Fedora-35.yaml) |
+| [fedora-35-test](https://github.com/tianocore/containers/pkgs/container/containers%2Ffedora-35-test) | Fedora 35 | Test | [![Fedora 35 Images](https://github.com/tianocore/containers/actions/workflows/Fedora-35.yaml/badge.svg)](https://github.com/tianocore/containers/actions/workflows/Fedora-35.yaml) |
+| [windows-2022-build](https://github.com/tianocore/containers/pkgs/container/containers%2Fwindows-2022-build) | Windows ServerCore 2022 | Build | [![Windows 2022 Images](https://github.com/tianocore/containers/actions/workflows/Windows-2022.yaml/badge.svg)](https://github.com/tianocore/containers/actions/workflows/Windows-2022.yaml) |
 
 ## Container Types
 
@@ -30,6 +31,10 @@ tools used for testing or development.
 Usually built on top of a corresponding build image, test images will additionally
 contain tools and packages used for testing the firmware. For example, test images
 will contain QEMU for testing a virtualized platform.
+
+### Dev
+
+Intended for local use to develop for EDKII based UEFI products.
 
 ## License
 
