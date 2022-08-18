@@ -21,6 +21,11 @@ on:
         required: false
         description: "Space-separated list of sub-image names. Can not be empty."
         default: "build"
+      runs_on:
+        type: string
+        required: false
+        description: "The OS used to build the docker image."
+        default: "ubuntu-latest"
 
 env:
   REGISTRY: ghcr.io
@@ -30,7 +35,7 @@ env:
 
 jobs:
   build-and-push-image:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs_on }}
     permissions:
       contents: read
       packages: write
@@ -48,6 +53,7 @@ jobs:
 
       - name: Set tag
         run: echo "short_sha=$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_ENV
+        shell: bash
 
       - name: Build
         run: |
