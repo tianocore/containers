@@ -59,7 +59,8 @@ jobs:
           done
         shell: bash
 
-      - name: Check
+      - name: Check (Linux)
+        if: runner.os == 'Linux'
         run: |
           # Only check the last sub-image in the list (for now)
           sub=${SUB_IMAGES##* }
