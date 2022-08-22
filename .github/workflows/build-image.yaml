@@ -65,6 +65,21 @@ jobs:
           done
         shell: bash
 
+      - name: Check (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          # Only check the last sub-image in the list (for now)
+          sub=${SUB_IMAGES##* }
+          IMG=$(tr '[:upper:]' '[:lower:]' <<< "${REGISTRY}/${REPOSITORY}/${IMAGE_NAME}-${sub}:${short_sha}")
+          echo "Launching ${IMG}..."
+          docker run \
+            --rm \
+            --volume "${PWD}":/work \
+            --workdir /work \
+            "${IMG}" \
+            "./.github/workflows/test_build_edk2.sh"
+        shell: bash
+
       - name: Push
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
