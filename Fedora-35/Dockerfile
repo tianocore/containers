@@ -76,7 +76,7 @@ RUN microdnf \
         tar \
         libicu
 
-# Setup the git credential manager for developer credentials
+# Setup the git credential manager for developer credentials.
 RUN wget https://github.com/GitCredentialManager/git-credential-manager/releases/download/v${GCM_VERSION}/gcm-linux_amd64.${GCM_VERSION}.tar.gz -O gcm.tar.gz
 RUN tar -xvf gcm.tar.gz -C /usr/local/bin
 RUN rm gcm.tar.gz
