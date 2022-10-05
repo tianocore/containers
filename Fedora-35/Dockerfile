@@ -5,7 +5,7 @@
 #
 # This file contains the definitions for images to be used for different
 # jobs in the EDK2 CI pipeline. The set of tools and dependencies is split into
-# multiple images to reduce the overall download size by providing images 
+# multiple images to reduce the overall download size by providing images
 # tailored to the task of the CI job. Currently there are two images: "build"
 # and "test".
 # The images are indented to run on x86_64.
@@ -61,3 +61,24 @@ RUN microdnf \
         qemu-system-arm-core \
         qemu-system-x86-core
 
+# Dev Image
+# This image is indented for jobs that run tests (and possibly also build)
+# firmware images. It is based on the build image and adds Qemu for the
+# architectures under test.
+FROM test AS dev
+ENV GCM_VERSION=2.0.785
+RUN microdnf \
+      --assumeyes \
+      --nodocs \
+      --setopt=install_weak_deps=0 \
+      install \
+        wget \
+        tar \
+        libicu
+
+# Setup the git credential manager for developer credentials
+RUN wget https://github.com/GitCredentialManager/git-credential-manager/releases/download/v${GCM_VERSION}/gcm-linux_amd64.${GCM_VERSION}.tar.gz -O gcm.tar.gz
+RUN tar -xvf gcm.tar.gz -C /usr/local/bin
+RUN rm gcm.tar.gz
+RUN git-credential-manager-core configure
+RUN git config --global credential.credentialStore cache
