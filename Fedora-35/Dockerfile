@@ -39,13 +39,17 @@ RUN microdnf \
         python${PYTHON_VERSION} \
         python3-distutils-extra \
         python3-pip \
-        python3-setuptools
+        python3-setuptools \
+        nodejs \
+        npm
 RUN alternatives --install /usr/bin/python python /usr/bin/python3 1
 RUN pip install pip --upgrade
 ENV GCC5_AARCH64_PREFIX /usr/bin/aarch64-linux-gnu-
 ENV GCC5_ARM_PREFIX     /usr/bin/arm-linux-gnu-
 ENV GCC5_RISCV64_PREFIX /usr/bin/riscv64-linux-gnu-
 
+# Tools used by build extensions.
+RUN npm install -g npm markdownlint-cli cspell
 
 # Test Image
 # This image is indented for jobs that run tests (and possibly also build)
@@ -66,19 +70,17 @@ RUN microdnf \
 # firmware images. It is based on the build image and adds Qemu for the
 # architectures under test.
 FROM test AS dev
-ENV GCM_VERSION=2.0.785
+ENV GCM_LINK=https://github.com/GitCredentialManager/git-credential-manager/releases/download/v2.0.785/gcm-linux_amd64.2.0.785.tar.gz
 RUN microdnf \
       --assumeyes \
       --nodocs \
       --setopt=install_weak_deps=0 \
       install \
+        libicu \
         wget \
-        tar \
-        libicu
+        tar
 
 # Setup the git credential manager for developer credentials.
-RUN wget https://github.com/GitCredentialManager/git-credential-manager/releases/download/v${GCM_VERSION}/gcm-linux_amd64.${GCM_VERSION}.tar.gz -O gcm.tar.gz
-RUN tar -xvf gcm.tar.gz -C /usr/local/bin
-RUN rm gcm.tar.gz
+RUN wget ${GCM_LINK} -O gcm.tar.gz && tar -xvf gcm.tar.gz -C /usr/local/bin && rm gcm.tar.gz
 RUN git-credential-manager-core configure
 RUN git config --global credential.credentialStore cache
