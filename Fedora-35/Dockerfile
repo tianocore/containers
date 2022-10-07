@@ -66,9 +66,8 @@ RUN microdnf \
         qemu-system-x86-core
 
 # Dev Image
-# This image is indented for jobs that run tests (and possibly also build)
-# firmware images. It is based on the build image and adds Qemu for the
-# architectures under test.
+# This image is indented for local use. This builds on the test image but adds
+# tools for local developers.
 FROM test AS dev
 ENV GCM_LINK=https://github.com/GitCredentialManager/git-credential-manager/releases/download/v2.0.785/gcm-linux_amd64.2.0.785.tar.gz
 RUN microdnf \
