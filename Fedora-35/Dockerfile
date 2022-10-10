@@ -5,7 +5,7 @@
 #
 # This file contains the definitions for images to be used for different
 # jobs in the EDK2 CI pipeline. The set of tools and dependencies is split into
-# multiple images to reduce the overall download size by providing images 
+# multiple images to reduce the overall download size by providing images
 # tailored to the task of the CI job. Currently there are two images: "build"
 # and "test".
 # The images are indented to run on x86_64.
@@ -39,13 +39,17 @@ RUN microdnf \
         python${PYTHON_VERSION} \
         python3-distutils-extra \
         python3-pip \
-        python3-setuptools
+        python3-setuptools \
+        nodejs \
+        npm
 RUN alternatives --install /usr/bin/python python /usr/bin/python3 1
 RUN pip install pip --upgrade
 ENV GCC5_AARCH64_PREFIX /usr/bin/aarch64-linux-gnu-
 ENV GCC5_ARM_PREFIX     /usr/bin/arm-linux-gnu-
 ENV GCC5_RISCV64_PREFIX /usr/bin/riscv64-linux-gnu-
 
+# Tools used by build extensions.
+RUN npm install -g npm markdownlint-cli cspell
 
 # Test Image
 # This image is indented for jobs that run tests (and possibly also build)
@@ -61,3 +65,21 @@ RUN microdnf \
         qemu-system-arm-core \
         qemu-system-x86-core
 
+# Dev Image
+# This image is indented for local use. This builds on the test image but adds
+# tools for local developers.
+FROM test AS dev
+ENV GCM_LINK=https://github.com/GitCredentialManager/git-credential-manager/releases/download/v2.0.785/gcm-linux_amd64.2.0.785.tar.gz
+RUN microdnf \
+      --assumeyes \
+      --nodocs \
+      --setopt=install_weak_deps=0 \
+      install \
+        libicu \
+        wget \
+        tar
+
+# Setup the git credential manager for developer credentials.
+RUN wget ${GCM_LINK} -O gcm.tar.gz && tar -xvf gcm.tar.gz -C /usr/local/bin && rm gcm.tar.gz
+RUN git-credential-manager-core configure
+RUN git config --global credential.credentialStore cache
