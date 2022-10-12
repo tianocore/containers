@@ -52,8 +52,6 @@ ENV GCC5_RISCV64_PREFIX /usr/bin/riscv64-linux-gnu-
 # Tools used by build extensions.
 RUN npm install -g npm markdownlint-cli cspell
 
-USER root
-
 # Test Image
 # This image is indented for jobs that run tests (and possibly also build)
 # firmware images. It is based on the build image and adds Qemu for the
