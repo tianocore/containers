@@ -41,7 +41,8 @@ RUN microdnf \
         python3-pip \
         python3-setuptools \
         nodejs \
-        npm
+        npm \
+        sudo
 RUN alternatives --install /usr/bin/python python /usr/bin/python3 1
 RUN pip install pip --upgrade
 ENV GCC5_AARCH64_PREFIX /usr/bin/aarch64-linux-gnu-
@@ -50,6 +51,8 @@ ENV GCC5_RISCV64_PREFIX /usr/bin/riscv64-linux-gnu-
 
 # Tools used by build extensions.
 RUN npm install -g npm markdownlint-cli cspell
+
+USER root
 
 # Test Image
 # This image is indented for jobs that run tests (and possibly also build)
