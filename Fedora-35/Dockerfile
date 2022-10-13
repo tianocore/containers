@@ -41,7 +41,8 @@ RUN microdnf \
         python3-pip \
         python3-setuptools \
         nodejs \
-        npm
+        npm \
+        sudo
 RUN alternatives --install /usr/bin/python python /usr/bin/python3 1
 RUN pip install pip --upgrade
 ENV GCC5_AARCH64_PREFIX /usr/bin/aarch64-linux-gnu-
