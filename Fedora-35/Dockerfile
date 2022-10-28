@@ -56,15 +56,35 @@ RUN npm install -g npm markdownlint-cli cspell
 # This image is indented for jobs that run tests (and possibly also build)
 # firmware images. It is based on the build image and adds Qemu for the
 # architectures under test.
+
+#Building qemu from source:
 FROM build AS test
+ARG QEMU_URL="https://download.qemu.org/qemu-7.1.0.tar.xz"
 RUN microdnf \
       --assumeyes \
       --nodocs \
       --setopt=install_weak_deps=0 \
       install \
-        qemu-system-aarch64-core \
-        qemu-system-arm-core \
-        qemu-system-x86-core
+        bzip2 \
+        findutils \
+        git \
+        glib2-devel \
+        libfdt-devel \
+        ninja-build \
+        pixman-devel \
+        python3 \
+        tar \
+        zlib-devel && \
+    mkdir -p qemu-build && cd qemu-build && \
+    curl "${QEMU_URL}" | \
+    tar --extract --strip-components=1 -J && \
+    ./configure --target-list=x86_64-softmmu,arm-softmmu,aarch64-softmmu && \
+    make install -j $(nproc) && \
+    rm -rf qemu-build && \
+    microdnf \
+      --assumeyes \
+      remove \
+        ninja-build
 
 # Dev Image
 # This image is indented for local use. This builds on the test image but adds
