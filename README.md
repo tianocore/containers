@@ -48,22 +48,23 @@ for this purpose. This section is not comprehensive however and it is encouraged
 users experiment and consider contributing back any new useful configurations or
 tools to this documentation.
 
+__NOTE__: If your code base is cloned in Windows, it is not advised that you directly
+open this repository in a dev container as the file system share between Windows
+and WSL 2 causes a very significant performance reduction. Instead, clone the
+repo in the WSL file system and map into the container or directly clone into the
+container.
+
 ### Visual Studio Code
 
 The Visual Studio Code [Dev Container extension](https://code.visualstudio.com/docs/devcontainers/containers)
-allows for easy and consistent way to use a container for local development by
-allowing a repo specific docker configuration. At the time of writing, this extension
-only supports Linux based containers. This extension provides a number of useful
-additions to the specified docker image on creation.
+provides an easy and consistent way to use containers for local development. At
+the time of writing, this extension only supports Linux based containers. This
+extension provides a number of useful additions to the specified docker image on
+creation.
 
-- Configures git credential manager to pipe in git credentials
-- Making extensions available on code inside the container
-
-__NOTE__: If your code base is cloned in Windows, it is not advised that you directly
-open this repository in a devcontainer as the file system share between Windows
-and WSL 2 causes a very significant performance degradation. Instead, clone the
-repo in the WSL file system and map into the container or directly clone into the
-container.
+- Configures git credential manager to pipe in git credentials.
+- Makes extensions available on code inside the container.
+- Abstracts management of the container for seamless use in the editor.
 
 For a shared docker image configuration, this can be configured by creating a
 .devcontainer file in the repository. Some useful configurations are details below.
@@ -73,6 +74,20 @@ For a shared docker image configuration, this can be configured by creating a
 | "privileged": true     | This may be needed for access to KVM for QEMU acceleration.  |
 | "forwardPorts": [####] | Can be used to forward debug or serial ports to the host OS. |
 
+It may also be desireable to run initialization commands using the "postCreateCommand"
+option. Specifically running "git config --global --add safe.directory ${containerWorkspaceFolder}"
+may be required if mapping the repository into the container is expected.
+
+And example of a devcontainer used for a QEMU platform repo is included below.
+
+```json
+{
+  "image": "ghcr.io/tianocore/containers/fedora-35-dev:latest",
+  "postCreateCommand": "git config --global --add safe.directory ${containerWorkspaceFolder} && pip install --upgrade -r pip-requirements.txt",
+  "forwardPorts": [5000],
+  "privileged": true
+}
+````
 
 ## Notes
 
