@@ -87,7 +87,7 @@ And example of a devcontainer used for a QEMU platform repo is included below.
   "forwardPorts": [5000],
   "privileged": true
 }
-````
+```
 
 ## Notes
 
