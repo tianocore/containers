@@ -39,13 +39,50 @@ will contain QEMU for testing a virtualized platform.
 
 Intended for local use to develop for EDKII based UEFI products.
 
+## Using containers locally
+
+Containers can provide a convenient and consistent dev environment when building
+EDK2 based firmware projects. This sections details some tools and tips that make
+using containers for local development easier. The DEV editions of the containers are intended
+for this purpose. This section is not comprehensive however and it is encouraged
+users experiment and consider contributing back any new useful configurations or
+tools to this documentation.
+
+### Visual Studio Code
+
+The Visual Studio Code [Dev Container extension](https://code.visualstudio.com/docs/devcontainers/containers)
+allows for easy and consistent way to use a container for local development by
+allowing a repo specific docker configuration. At the time of writing, this extension
+only supports Linux based containers. This extension provides a number of useful
+additions to the specified docker image on creation.
+
+- Configures git credential manager to pipe in git credentials
+- Making extensions available on code inside the container
+
+__NOTE__: If your code base is cloned in Windows, it is not advised that you directly
+open this repository in a devcontainer as the file system share between Windows
+and WSL 2 causes a very significant performance degradation. Instead, clone the
+repo in the WSL file system and map into the container or directly clone into the
+container.
+
+For a shared docker image configuration, this can be configured by creating a
+.devcontainer file in the repository. Some useful configurations are details below.
+
+| Configuration          | Purpose |
+| :------------          | :------ |
+| "privileged": true     | This may be needed for access to KVM for QEMU acceleration.  |
+| "forwardPorts": [####] | Can be used to forward debug or serial ports to the host OS. |
+
+
 ## Notes
 
 ### Ubuntu 20
+
 The 'dev' image of this set is suitable for development and uses a non-standard entry-point
 script which changes the user inside the container to match the outside user
 and expects the users home directory to be shared.
 It can be run like this:
+
 ```
 docker run -it \
        -v "${HOME}":"${HOME}" -e EDK2_DOCKER_USER_HOME="${HOME}" \
@@ -53,6 +90,7 @@ docker run -it \
 ```
 
 To enter the container as 'root', prepend the command to run with `su`, for example
+
 ```
 docker run -it \
        -v "${HOME}":"${HOME}" -e EDK2_DOCKER_USER_HOME="${HOME}" \
