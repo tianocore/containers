@@ -7,6 +7,12 @@ Container images are automatically build and uploaded to the associated github
 container registry. Links to the container registry for the various images can
 be found in [current status](#Current-Status).
 
+## Quick Start
+
+If you plan to use these containers for test/dev, you may not need to build them from source.
+
+You can pick the [latest image](#current-status) for each container type, and download it directly from Github container hub using the instructions provided at the image link, then run the container locally.
+
 ## Current Status
 
 | Image Name                                                                                                   | OS SKU                  | Type  | Build Status                                                                                                                                                                                 | Documentation                 |
