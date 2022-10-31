@@ -41,7 +41,7 @@ Intended for local use to develop for EDKII based UEFI products.
 
 ## Using containers locally
 
-Containers can provide a convenient and consistent dev environment when building
+Containers can provide a convenient and consistent development environment when building
 EDK2 based firmware projects. This section details some tools and tips that make
 using containers for local development easier. The DEV editions of the containers
 are intended for this purpose. This section is not comprehensive however and it
@@ -75,7 +75,7 @@ For a shared docker image configuration, this can be configured by creating a
 | "forwardPorts": [####] | Can be used to forward debug or serial ports to the host OS. |
 
 It may also be desireable to run initialization commands using the "postCreateCommand"
-option. Specifically running "git config --global --add safe.directory ${containerWorkspaceFolder}"
+option. Specifically running `git config --global --add safe.directory ${containerWorkspaceFolder}`
 may be required if mapping the repository into the container is expected.
 
 And example of a devcontainer used for a QEMU platform repo is included below.
