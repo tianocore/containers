@@ -42,14 +42,14 @@ Intended for local use to develop for EDKII based UEFI products.
 ## Using containers locally
 
 Containers can provide a convenient and consistent dev environment when building
-EDK2 based firmware projects. This sections details some tools and tips that make
-using containers for local development easier. The DEV editions of the containers are intended
-for this purpose. This section is not comprehensive however and it is encouraged
-users experiment and consider contributing back any new useful configurations or
-tools to this documentation.
+EDK2 based firmware projects. This section details some tools and tips that make
+using containers for local development easier. The DEV editions of the containers
+are intended for this purpose. This section is not comprehensive however and it
+is encouraged users experiment and consider contributing back any new useful
+configurations or tools to this documentation.
 
 __NOTE__: If your code base is cloned in Windows, it is not advised that you directly
-open this repository in a dev container as the file system share between Windows
+open this repository in a Linux dev container as the file system share between Windows
 and WSL 2 causes a very significant performance reduction. Instead, clone the
 repo in the WSL file system and map into the container or directly clone into the
 container.
