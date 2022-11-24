@@ -119,10 +119,39 @@ RUN mkdir /edkrepo_install && cd /edkrepo_install && \
 COPY init_edkrepo_conf.sh /usr/bin/init_edkrepo_conf
 
 
+# Test Image
+# This image is indented for jobs that run tests (and possibly also build)
+# firmware images. It is based on the build image and adds Qemu for the
+# architectures under test.
+
+#Building qemu from source:
+FROM build AS test
+ARG QEMU_URL="https://download.qemu.org/qemu-7.1.0.tar.xz"
+RUN apt-get update && apt-get install --yes --no-install-recommends \
+        autoconf \
+        automake \
+        autotools-dev \
+        build-essential \
+        gcc \
+        libpixman-1-dev \
+        libglib2.0-dev \
+        libsdl2-dev \
+        ninja-build \
+        bc \
+        tar && \
+    mkdir -p qemu-build && cd qemu-build && \
+    wget  "${QEMU_URL}" && \
+    tar -xf qemu-7.1.0.tar.xz --strip-components=1 && \
+    ./configure --target-list=x86_64-softmmu,arm-softmmu,aarch64-softmmu,riscv32-softmmu,riscv32-linux-user,riscv64-linux-user,riscv64-softmmu && \
+    make install -j $(nproc) && \
+    rm -rf qemu-build && \
+    apt remove --yes \
+        ninja-build
+
 #####################################################################
 # Dev Image
 #
-FROM build AS dev
+FROM test AS dev
 
 # Install convenience tools.  Things we like having around, but aren't
 # required.
