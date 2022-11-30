@@ -19,6 +19,7 @@ FROM registry.fedoraproject.org/fedora-minimal:35 AS build
 ENV GCC_VERSION=11.2.1-1.fc35
 ENV NASM_VERSION=2.15.05-1.fc35
 ENV PYTHON_VERSION=3.10
+ARG GCC_LOONGARCH64_URL="https://github.com/loongson/build-tools/releases/download/2022.09.06/loongarch64-clfs-6.3-cross-tools-c-only.tar.xz"
 RUN microdnf \
       --assumeyes \
       --nodocs \
@@ -42,12 +43,19 @@ RUN microdnf \
         python3-setuptools \
         nodejs \
         npm \
+        tar \
         sudo
 RUN alternatives --install /usr/bin/python python /usr/bin/python3 1
 RUN pip install pip --upgrade
+
+RUN mkdir -p /cross-tools/ && \
+      curl -L "${GCC_LOONGARCH64_URL}" | \
+      tar --extract -z --strip-components=1 -C /cross-tools
+
 ENV GCC5_AARCH64_PREFIX /usr/bin/aarch64-linux-gnu-
 ENV GCC5_ARM_PREFIX     /usr/bin/arm-linux-gnu-
 ENV GCC5_RISCV64_PREFIX /usr/bin/riscv64-linux-gnu-
+ENV GCC5_LOONGARCH64_PREFIX /cross-tools/bin/loongarch64-unknown-linux-gnu-
 
 # Tools used by build extensions.
 RUN npm install -g npm markdownlint-cli cspell
