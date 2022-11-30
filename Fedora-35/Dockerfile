@@ -86,7 +86,7 @@ RUN microdnf \
     mkdir -p qemu-build && cd qemu-build && \
     curl "${QEMU_URL}" | \
     tar --extract --strip-components=1 -J && \
-    ./configure --target-list=x86_64-softmmu,arm-softmmu,aarch64-softmmu && \
+    ./configure --target-list=x86_64-softmmu,arm-softmmu,aarch64-softmmu,loongarch64-softmmu && \
     make install -j $(nproc) && \
     rm -rf qemu-build && \
     microdnf \
