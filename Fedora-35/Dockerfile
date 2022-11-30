@@ -25,6 +25,7 @@ RUN microdnf \
       --nodocs \
       --setopt=install_weak_deps=0 \
       install \
+        acpica-tools \
         gcc-c++-${GCC_VERSION} \
         gcc-${GCC_VERSION} \
         gcc-aarch64-linux-gnu-${GCC_VERSION} \
