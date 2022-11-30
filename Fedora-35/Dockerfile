@@ -16,10 +16,12 @@
 # purpose image. It contains the toolchains for all supported architectures, and
 # all build dependencies.
 FROM registry.fedoraproject.org/fedora-minimal:35 AS build
-ENV GCC_VERSION=11.2.1-1.fc35
-ENV NASM_VERSION=2.15.05-1.fc35
-ENV PYTHON_VERSION=3.10
+ARG GCC_VERSION=11.2.1-1.fc35
+ARG NASM_VERSION=2.15.05-1.fc35
+ARG PYTHON_VERSION=3.10
 ARG GCC_LOONGARCH64_URL="https://github.com/loongson/build-tools/releases/download/2022.09.06/loongarch64-clfs-6.3-cross-tools-c-only.tar.xz"
+ARG CSPELL_VERSION=5.20.0
+ARG MARKDOWNLINT_VERSION=0.31.0
 RUN microdnf \
       --assumeyes \
       --nodocs \
@@ -59,7 +61,9 @@ ENV GCC5_RISCV64_PREFIX /usr/bin/riscv64-linux-gnu-
 ENV GCC5_LOONGARCH64_PREFIX /cross-tools/bin/loongarch64-unknown-linux-gnu-
 
 # Tools used by build extensions.
-RUN npm install -g npm markdownlint-cli cspell
+RUN npm install -g npm \
+      cspell@${CSPELL_VERSION} \
+      markdownlint-cli@${MARKDOWNLINT_VERSION}
 
 # Test Image
 # This image is indented for jobs that run tests (and possibly also build)
