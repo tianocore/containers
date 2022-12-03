@@ -117,3 +117,4 @@ RUN microdnf \
 RUN wget ${GCM_LINK} -O gcm.tar.gz && tar -xvf gcm.tar.gz -C /usr/local/bin && rm gcm.tar.gz
 RUN git-credential-manager-core configure
 RUN git config --global credential.credentialStore cache
+RUN cp /etc/skel/.bashrc /root/.bashrc
