@@ -24,4 +24,4 @@ jobs:
       uses: ./.github/workflows/build-image.yaml
       with:
         image_name: "Ubuntu-20"
-        sub_images: "dev build"
+        sub_images: "dev test build"
