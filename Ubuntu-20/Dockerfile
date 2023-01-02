@@ -9,9 +9,10 @@
 # development user.
 
 
-#####################################################################
 # Build Image
-#
+# This image is intended for jobs that compile the source code and as a general
+# purpose image. It contains the toolchains for all supported architectures, and
+# all build dependencies.
 FROM ubuntu:20.04 AS build
 
 # Set the EDKREPO URL (and version)
@@ -25,42 +26,47 @@ ENV TZ=UTC
 
 ENV GCC_MAJOR_VERSION=10
 
-# Update the package list
-RUN apt-get update
-
-# Set the locale.
-RUN apt-get install --yes --no-install-recommends locales && \
-    sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
-    locale-gen
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
-
-# Upgrade all packages.
-RUN apt-get upgrade -y
-
-# Install the basics
-RUN apt-get install -y cryptsetup apt-transport-https apt-utils \
-      software-properties-common sudo wget && \
-    apt-get install --yes python3.9 python3-pip python3.9-venv && \
-    update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1 && \
-    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
-
-# Add mono's PPA.  The stuart docs direct people to install directly from the
-# mono project, so we'll do the same.
-# - https://github.com/tianocore/edk2-pytool-extensions/blob/master/docs/usability/using_extdep.md#a-note-on-nuget-on-linux
-RUN apt-get install -y gnupg ca-certificates && \
+# Install and update the package list
+RUN apt-get update && \
+    apt-get install --yes --no-install-recommends \
+        software-properties-common \
+        apt-utils \
+        cryptsetup \
+        apt-transport-https \
+        sudo \
+        wget \
+        build-essential \
+        uuid-dev \
+        git \
+        virtualenv \
+        device-tree-compiler \
+        mono-devel \
+        python3.9\
+        python3-pip \
+        python3.9-venv \
+        locales \
+    # Add mono's PPA.  The stuart docs direct people to install directly from the
+    # mono project, so we'll do the same.
+    # - https://github.com/tianocore/edk2-pytool-extensions/blob/master/docs/usability/using_extdep.md#a-note-on-nuget-on-linux
+        gnupg \
+        ca-certificates && \
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
-    echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
+    echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list &&\
+    apt-get install --yes --no-install-recommends \
+        g++-${GCC_MAJOR_VERSION} gcc-${GCC_MAJOR_VERSION} \
+        g++-${GCC_MAJOR_VERSION}-x86-64-linux-gnux32 gcc-${GCC_MAJOR_VERSION}-x86-64-linux-gnux32 \
+        g++-${GCC_MAJOR_VERSION}-aarch64-linux-gnu gcc-${GCC_MAJOR_VERSION}-aarch64-linux-gnu \
+        g++-${GCC_MAJOR_VERSION}-riscv64-linux-gnu gcc-${GCC_MAJOR_VERSION}-riscv64-linux-gnu \
+        g++-${GCC_MAJOR_VERSION}-arm-linux-gnueabi gcc-${GCC_MAJOR_VERSION}-arm-linux-gnueabi \
+        g++-${GCC_MAJOR_VERSION}-arm-linux-gnueabihf gcc-${GCC_MAJOR_VERSION}-arm-linux-gnueabihf && \
+    apt-get upgrade -y && \
+    apt-get clean &&\
+    rm -rf /var/lib/apt/lists/*
 
-# Install toolchains.
-RUN apt install -y \
-    g++-${GCC_MAJOR_VERSION} gcc-${GCC_MAJOR_VERSION} \
-    g++-${GCC_MAJOR_VERSION}-x86-64-linux-gnux32 gcc-${GCC_MAJOR_VERSION}-x86-64-linux-gnux32 \
-    g++-${GCC_MAJOR_VERSION}-aarch64-linux-gnu gcc-${GCC_MAJOR_VERSION}-aarch64-linux-gnu \
-    g++-${GCC_MAJOR_VERSION}-riscv64-linux-gnu gcc-${GCC_MAJOR_VERSION}-riscv64-linux-gnu \
-    g++-${GCC_MAJOR_VERSION}-arm-linux-gnueabi gcc-${GCC_MAJOR_VERSION}-arm-linux-gnueabi \
-    g++-${GCC_MAJOR_VERSION}-arm-linux-gnueabihf gcc-${GCC_MAJOR_VERSION}-arm-linux-gnueabihf && \
+RUN update-alternatives \
+      --install /usr/bin/python python /usr/bin/python3.9 1 &&\
+    update-alternatives \
+      --install /usr/bin/python3 python3 /usr/bin/python3.9 1 &&\
     update-alternatives \
       --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_MAJOR_VERSION} 100 \
       --slave /usr/bin/g++ g++ /usr/bin/g++-${GCC_MAJOR_VERSION} \
@@ -97,27 +103,29 @@ RUN apt install -y \
       --slave /usr/bin/riscv64-linux-gnu-gcov riscv64-linux-gnu-gcov /usr/bin/riscv64-linux-gnu-gcov-${GCC_MAJOR_VERSION} && \
     update-alternatives \
       --install /usr/bin/riscv64-linux-gnu-cpp riscv64-linux-gnu-cpp /usr/bin/riscv64-linux-gnu-cpp-${GCC_MAJOR_VERSION} 100
+
+# Set toolchains prefix
 ENV GCC5_AARCH64_PREFIX /usr/bin/aarch64-linux-gnu-
 ENV GCC5_ARM_PREFIX     /usr/bin/arm-linux-gnueabi-
 ENV GCC5_RISCV64_PREFIX /usr/bin/riscv64-linux-gnu-
 
-# Install deps.
-RUN apt install -y build-essential uuid-dev git virtualenv \
-    device-tree-compiler mono-devel wget
-
-# Cleanup
-RUN apt-get -y autoremove
-RUN apt-get clean
+# Set the locale
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
+    locale-gen
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 # Install edkrepo
-RUN mkdir /edkrepo_install && cd /edkrepo_install && \
+RUN mkdir /edkrepo_install && \
+    cd /edkrepo_install && \
     wget -O- ${EDKREPO_URL} | tar zxvf - && \
     ./install.py --no-prompt --user $(id -nu) && \
     mkdir -p /etc/edkrepo_skel && \
     cp -R /root/.edkrepo /etc/edkrepo_skel && \
     rm -rf /edkrepo_install
-COPY init_edkrepo_conf.sh /usr/bin/init_edkrepo_conf
 
+COPY init_edkrepo_conf.sh /usr/bin/init_edkrepo_conf
 
 # Test Image
 # This image is indented for jobs that run tests (and possibly also build)
@@ -155,7 +163,12 @@ FROM test AS dev
 
 # Install convenience tools.  Things we like having around, but aren't
 # required.
-RUN apt-get install -y vim nano bear
+RUN apt-get update && \
+    apt-get install --yes --no-install-recommends \
+        vim \
+        nano \
+        bear &&\
+    apt-get clean \
 
 # Setup the entry point
 COPY ubuntu20_dev_entrypoint.sh /usr/libexec/entrypoint
