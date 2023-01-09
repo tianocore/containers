@@ -72,7 +72,8 @@ RUN npm install -g npm \
 
 #Building qemu from source:
 FROM build AS test
-ARG QEMU_URL="https://download.qemu.org/qemu-7.1.0.tar.xz"
+ARG QEMU_URL="https://gitlab.com/qemu-project/qemu.git"
+ARG QEMU_BRANCH="v7.2.0"
 RUN dnf \
       --assumeyes \
       --nodocs \
@@ -86,11 +87,10 @@ RUN dnf \
         ninja-build \
         pixman-devel \
         python3 \
-        tar \
         zlib-devel && \
-    mkdir -p qemu-build && cd qemu-build && \
-    curl "${QEMU_URL}" | \
-    tar --extract --strip-components=1 -J && \
+    git clone "${QEMU_URL}" --branch "${QEMU_BRANCH}" --depth 1 qemu && \
+    cd qemu && \
+    curl "https://patchwork.ozlabs.org/project/qemu-devel/patch/20230105161804.82486-1-lersek@redhat.com/mbox/" | git apply --ignore-whitespace && \
     ./configure --target-list=x86_64-softmmu,arm-softmmu,aarch64-softmmu,loongarch64-softmmu && \
     make install -j $(nproc) && \
     rm -rf qemu-build && \
