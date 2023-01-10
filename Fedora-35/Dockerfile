@@ -22,7 +22,7 @@ ARG PYTHON_VERSION=3.10
 ARG GCC_LOONGARCH64_URL="https://github.com/loongson/build-tools/releases/download/2022.09.06/loongarch64-clfs-6.3-cross-tools-c-only.tar.xz"
 ARG CSPELL_VERSION=5.20.0
 ARG MARKDOWNLINT_VERSION=0.31.0
-RUN microdnf \
+RUN dnf \
       --assumeyes \
       --nodocs \
       --setopt=install_weak_deps=0 \
@@ -73,7 +73,7 @@ RUN npm install -g npm \
 #Building qemu from source:
 FROM build AS test
 ARG QEMU_URL="https://download.qemu.org/qemu-7.1.0.tar.xz"
-RUN microdnf \
+RUN dnf \
       --assumeyes \
       --nodocs \
       --setopt=install_weak_deps=0 \
@@ -94,7 +94,7 @@ RUN microdnf \
     ./configure --target-list=x86_64-softmmu,arm-softmmu,aarch64-softmmu,loongarch64-softmmu && \
     make install -j $(nproc) && \
     rm -rf qemu-build && \
-    microdnf \
+    dnf \
       --assumeyes \
       remove \
         ninja-build
@@ -104,7 +104,7 @@ RUN microdnf \
 # tools for local developers.
 FROM test AS dev
 ENV GCM_LINK=https://github.com/GitCredentialManager/git-credential-manager/releases/download/v2.0.785/gcm-linux_amd64.2.0.785.tar.gz
-RUN microdnf \
+RUN dnf \
       --assumeyes \
       --nodocs \
       --setopt=install_weak_deps=0 \
