@@ -22,6 +22,7 @@ ARG PYTHON_VERSION=3.10
 ARG GCC_LOONGARCH64_URL="https://github.com/loongson/build-tools/releases/download/2022.09.06/loongarch64-clfs-6.3-cross-tools-c-only.tar.xz"
 ARG CSPELL_VERSION=5.20.0
 ARG MARKDOWNLINT_VERSION=0.31.0
+ARG POWERSHELL_VERSION=7.3.1
 RUN dnf \
       --assumeyes \
       --nodocs \
@@ -40,6 +41,7 @@ RUN dnf \
         make \
         nuget \
         nasm-${NASM_VERSION} \
+        https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell-${POWERSHELL_VERSION}-1.rh.x86_64.rpm \
         python${PYTHON_VERSION} \
         python3-distutils-extra \
         python3-pip \
