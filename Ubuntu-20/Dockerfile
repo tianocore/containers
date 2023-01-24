@@ -168,7 +168,7 @@ RUN apt-get update && \
         vim \
         nano \
         bear &&\
-    apt-get clean \
+    apt-get clean
 
 # Setup the entry point
 COPY ubuntu20_dev_entrypoint.sh /usr/libexec/entrypoint
