@@ -23,6 +23,7 @@ ARG GCC_LOONGARCH64_URL="https://github.com/loongson/build-tools/releases/downlo
 ARG CSPELL_VERSION=5.20.0
 ARG MARKDOWNLINT_VERSION=0.31.0
 ARG POWERSHELL_VERSION=7.3.1
+ARG DOTNET_VERSION=6.0
 RUN dnf \
       --assumeyes \
       --nodocs \
@@ -49,7 +50,8 @@ RUN dnf \
         nodejs \
         npm \
         tar \
-        sudo
+        sudo \
+        dotnet-runtime-${DOTNET_VERSION}
 RUN alternatives --install /usr/bin/python python /usr/bin/python3 1
 RUN pip install pip --upgrade
 
