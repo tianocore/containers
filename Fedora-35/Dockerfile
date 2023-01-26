@@ -51,7 +51,8 @@ RUN dnf \
         npm \
         tar \
         sudo \
-        dotnet-runtime-${DOTNET_VERSION}
+        dotnet-runtime-${DOTNET_VERSION} \
+        dotnet-sdk-${DOTNET_VERSION}.x86_64
 RUN alternatives --install /usr/bin/python python /usr/bin/python3 1
 RUN pip install pip --upgrade
 
