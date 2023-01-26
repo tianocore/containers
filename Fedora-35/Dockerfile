@@ -51,7 +51,7 @@ RUN dnf \
         nodejs \
         npm \
         tar \
-        sudo \
+        sudo
 RUN alternatives --install /usr/bin/python python /usr/bin/python3 1
 RUN pip install pip --upgrade
 
