@@ -30,6 +30,7 @@ RUN dnf \
       --setopt=install_weak_deps=0 \
       install \
         acpica-tools \
+        dotnet-runtime-${DOTNET_VERSION} \
         gcc-c++-${GCC_VERSION} \
         gcc-${GCC_VERSION} \
         gcc-aarch64-linux-gnu-${GCC_VERSION} \
@@ -51,7 +52,6 @@ RUN dnf \
         npm \
         tar \
         sudo \
-        dotnet-runtime-${DOTNET_VERSION}
 RUN alternatives --install /usr/bin/python python /usr/bin/python3 1
 RUN pip install pip --upgrade
 
