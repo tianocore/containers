@@ -45,6 +45,6 @@ build_step() {
   stuart_build $opts -c "${build}" -a "${arch}"
 }
 
-build_step "OvmfPkg/PlatformCI/PlatformBuild.py"    "X64"
-build_step "ArmVirtPkg/PlatformCI/PlatformBuild.py" "AARCH64"
-build_step "ArmVirtPkg/PlatformCI/PlatformBuild.py" "ARM"
+build_step "OvmfPkg/PlatformCI/PlatformBuild.py"  "X64"
+build_step "ArmVirtPkg/PlatformCI/QemuBuild.py"   "AARCH64"
+build_step "ArmVirtPkg/PlatformCI/QemuBuild.py"   "ARM"
