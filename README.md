@@ -19,8 +19,11 @@ be found in [current status](#Current-Status).
 | [fedora-35-dev](https://github.com/tianocore/containers/pkgs/container/containers%2Ffedora-35-dev)           | Fedora 35               | Dev   | [![Fedora 35 Images](https://github.com/tianocore/containers/actions/workflows/Fedora-35.yaml/badge.svg)](https://github.com/tianocore/containers/actions/workflows/Fedora-35.yaml)          | [Doc](Fedora-35/Readme.md)    |
 | [windows-2022-build](https://github.com/tianocore/containers/pkgs/container/containers%2Fwindows-2022-build) | Windows ServerCore 2022 | Build | [![Windows 2022 Images](https://github.com/tianocore/containers/actions/workflows/Windows-2022.yaml/badge.svg)](https://github.com/tianocore/containers/actions/workflows/Windows-2022.yaml) | [Doc](Windows-2022/Readme.md) |
 | [ubuntu-20-build](https://github.com/tianocore/containers/pkgs/container/containers%2Fubuntu-20-build)       | Ubuntu 20.04            | Build | [![Ubuntu 20 Images](https://github.com/tianocore/containers/actions/workflows/Ubuntu-20.yaml/badge.svg)](https://github.com/tianocore/containers/actions/workflows/Ubuntu-20.yaml)          | [Doc](Ubuntu-20/Readme.md)    |
-| [ubuntu-20-test](https://github.com/tianocore/containers/pkgs/container/containers%2Fubuntu-20-test)       | Ubuntu 20.04            | Test | [![Ubuntu 20 Images](https://github.com/tianocore/containers/actions/workflows/Ubuntu-20.yaml/badge.svg)](https://github.com/tianocore/containers/actions/workflows/Ubuntu-20.yaml)          | [Doc](Ubuntu-20/Readme.md)    |
+| [ubuntu-20-test](https://github.com/tianocore/containers/pkgs/container/containers%2Fubuntu-20-test)         | Ubuntu 20.04            | Test  | [![Ubuntu 20 Images](https://github.com/tianocore/containers/actions/workflows/Ubuntu-20.yaml/badge.svg)](https://github.com/tianocore/containers/actions/workflows/Ubuntu-20.yaml)          | [Doc](Ubuntu-20/Readme.md)    |
 | [ubuntu-20-dev](https://github.com/tianocore/containers/pkgs/container/containers%2Fubuntu-20-dev)           | Ubuntu 20.04            | Dev   | [![Ubuntu 20 Images](https://github.com/tianocore/containers/actions/workflows/Ubuntu-20.yaml/badge.svg)](https://github.com/tianocore/containers/actions/workflows/Ubuntu-20.yaml)          | [Doc](Ubuntu-20/Readme.md)    |
+| [ubuntu-22-build](https://github.com/tianocore/containers/pkgs/container/containers%2Fubuntu-22-build)       | Ubuntu 22.04            | Build | [![Ubuntu 22 Images](https://github.com/tianocore/containers/actions/workflows/Ubuntu-22.yaml/badge.svg)](https://github.com/tianocore/containers/actions/workflows/Ubuntu-22.yaml)          | [Doc](Ubuntu-22/Readme.md)    |
+| [ubuntu-22-test](https://github.com/tianocore/containers/pkgs/container/containers%2Fubuntu-22-test)         | Ubuntu 22.04            | Test  | [![Ubuntu 22 Images](https://github.com/tianocore/containers/actions/workflows/Ubuntu-22.yaml/badge.svg)](https://github.com/tianocore/containers/actions/workflows/Ubuntu-22.yaml)          | [Doc](Ubuntu-22/Readme.md)    |
+| [ubuntu-22-dev](https://github.com/tianocore/containers/pkgs/container/containers%2Fubuntu-22-dev)           | Ubuntu 22.04            | Dev   | [![Ubuntu 22 Images](https://github.com/tianocore/containers/actions/workflows/Ubuntu-22.yaml/badge.svg)](https://github.com/tianocore/containers/actions/workflows/Ubuntu-22.yaml)          | [Doc](Ubuntu-22/Readme.md)    |
 
 ## Container Types
 
@@ -95,17 +98,17 @@ And example of a devcontainer used for a QEMU platform repo is included below.
 
 ## Notes
 
-### Ubuntu 20
+### Ubuntu
 
-The 'dev' image of this set is suitable for development and uses a non-standard entry-point
+The Ubuntu 'dev' images are suitable for development and uses a non-standard entry-point
 script which changes the user inside the container to match the outside user
 and expects the users home directory to be shared.
-It can be run like this:
+They can be run like this (changing ubuntu-XX to the appropriate version, such as ubuntu-22):
 
 ```
 docker run -it \
        -v "${HOME}":"${HOME}" -e EDK2_DOCKER_USER_HOME="${HOME}" \
-       ghcr.io/tianocore/containers/ubuntu-20-dev:latest /bin/bash
+       ghcr.io/tianocore/containers/ubuntu-XX-dev:latest /bin/bash
 ```
 
 To enter the container as 'root', prepend the command to run with `su`, for example
@@ -113,7 +116,7 @@ To enter the container as 'root', prepend the command to run with `su`, for exam
 ```
 docker run -it \
        -v "${HOME}":"${HOME}" -e EDK2_DOCKER_USER_HOME="${HOME}" \
-       ghcr.io/tianocore/containers/ubuntu-20-dev:latest su /bin/bash
+       ghcr.io/tianocore/containers/ubuntu-XX-dev:latest su /bin/bash
 ```
 
 The images provide the ["edkrepo" tool](https://github.com/tianocore/edk2-edkrepo).

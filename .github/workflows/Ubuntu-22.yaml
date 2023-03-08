@@ -1,11 +1,11 @@
-# GitHub Action Workflow for building the Ubuntu 20 images.
+# GitHub Action Workflow for building the Ubuntu 22 images.
 
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 
-name: "Ubuntu 20 Images"
+name: "Ubuntu 22 Images"
 
 # This workflow only runs (on the main branch or on PRs targeted
-# at the main branch) and if files inside the Ubuntu-20 directory
+# at the main branch) and if files inside the Ubuntu-22 directory
 # have been modifed/added/removed...
 
 on:
@@ -13,15 +13,15 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'Ubuntu-20/**'
+      - 'Ubuntu-22/**'
   pull_request:
     branches: [ main ]
     paths:
-      - 'Ubuntu-20/**'
+      - 'Ubuntu-22/**'
 
 jobs:
   Build_Image:
       uses: ./.github/workflows/build-image.yaml
       with:
-        image_name: "Ubuntu-20"
+        image_name: "Ubuntu-22"
         sub_images: "dev test build"
