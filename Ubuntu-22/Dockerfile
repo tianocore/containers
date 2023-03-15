@@ -1,7 +1,7 @@
-# Copyright (c) 2022-2023 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# Copyright (c) 2023 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 
-# Build ubuntu20-based container images for use when building EDK2:
+# Build ubuntu22-based container images for use when building EDK2:
 # - build.  This image has the basic set of tools required to build EDK2.  It's
 # appropriate for use in CI pipelines and other automation.
 # - dev.  This image is the build image, plus a few developer-friendly
@@ -13,7 +13,7 @@
 # This image is intended for jobs that compile the source code and as a general
 # purpose image. It contains the toolchains for all supported architectures, and
 # all build dependencies.
-FROM ubuntu:20.04 AS build
+FROM ubuntu:22.04 AS build
 
 # Set the EDKREPO URL (and version)
 ENV EDKREPO_URL=https://github.com/tianocore/edk2-edkrepo/releases/download/edkrepo-v2.1.2/edkrepo-2.1.2.tar.gz
@@ -24,7 +24,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Set timezone.
 ENV TZ=UTC
 
-ENV GCC_MAJOR_VERSION=10
+ENV GCC_MAJOR_VERSION=12
 
 # Install and update the package list
 RUN apt-get update && \
@@ -40,19 +40,13 @@ RUN apt-get update && \
         git \
         virtualenv \
         device-tree-compiler \
-        python3.9\
+        mono-devel \
+        python3\
         python3-pip \
-        python3.9-venv \
+        python3-venv \
         locales \
         gnupg \
         ca-certificates && \
-    # Add mono's PPA.  The stuart docs direct people to install directly from the
-    # mono project, so we'll do the same.
-    # - https://github.com/tianocore/edk2-pytool-extensions/blob/master/docs/usability/using_extdep.md#a-note-on-nuget-on-linux
-    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
-    echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list && \
-    apt-get install --yes --no-install-recommends \
-        mono-devel && \
     apt-get install --yes --no-install-recommends \
         g++-${GCC_MAJOR_VERSION} gcc-${GCC_MAJOR_VERSION} \
         g++-${GCC_MAJOR_VERSION}-x86-64-linux-gnux32 gcc-${GCC_MAJOR_VERSION}-x86-64-linux-gnux32 \
@@ -64,10 +58,11 @@ RUN apt-get update && \
     apt-get clean &&\
     rm -rf /var/lib/apt/lists/*
 
-RUN update-alternatives \
-      --install /usr/bin/python python /usr/bin/python3.9 1 &&\
+RUN \
     update-alternatives \
-      --install /usr/bin/python3 python3 /usr/bin/python3.9 1 &&\
+      --install /usr/bin/python python /usr/bin/python3.10 1 &&\
+    update-alternatives \
+      --install /usr/bin/python3 python3 /usr/bin/python3.10 1 &&\
     update-alternatives \
       --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_MAJOR_VERSION} 100 \
       --slave /usr/bin/g++ g++ /usr/bin/g++-${GCC_MAJOR_VERSION} \
@@ -172,5 +167,5 @@ RUN apt-get update && \
     apt-get clean
 
 # Setup the entry point
-COPY ubuntu20_dev_entrypoint.sh /usr/libexec/entrypoint
+COPY ubuntu22_dev_entrypoint.sh /usr/libexec/entrypoint
 ENTRYPOINT ["/usr/libexec/entrypoint"]
