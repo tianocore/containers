@@ -37,6 +37,7 @@ RUN dnf \
         gcc-arm-linux-gnu-${GCC_VERSION} \
         gcc-riscv64-linux-gnu-${GCC_VERSION} \
         git \
+        lcov \
         libX11-devel \
         libXext-devel \
         libuuid-devel \
@@ -53,7 +54,7 @@ RUN dnf \
         tar \
         sudo
 RUN alternatives --install /usr/bin/python python /usr/bin/python3 1
-RUN pip install pip --upgrade
+RUN pip install pip lcov_cobertura --upgrade
 
 RUN mkdir -p /cross-tools/ && \
       curl -L "${GCC_LOONGARCH64_URL}" | \
