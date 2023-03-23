@@ -99,7 +99,7 @@ RUN dnf \
     git clone "${QEMU_URL}" --branch "${QEMU_BRANCH}" --depth 1 qemu && \
     cd qemu && \
     curl "https://patchwork.ozlabs.org/project/qemu-devel/patch/20230105161804.82486-1-lersek@redhat.com/mbox/" | git apply --ignore-whitespace && \
-    ./configure --target-list=x86_64-softmmu,arm-softmmu,aarch64-softmmu,loongarch64-softmmu && \
+    ./configure --target-list=x86_64-softmmu,arm-softmmu,aarch64-softmmu,loongarch64-softmmu --enable-gtk && \
     make install -j $(nproc) && \
     rm -rf qemu-build && \
     dnf \
