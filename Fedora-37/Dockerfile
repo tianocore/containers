@@ -90,6 +90,7 @@ RUN dnf \
         findutils \
         git \
         glib2-devel \
+        gtk3-devel \
         libfdt-devel \
         ninja-build \
         pixman-devel \
