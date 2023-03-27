@@ -63,6 +63,7 @@ jobs:
             echo "Building Image: ${IMG}:${short_sha}..."
             docker build --target "${sub}" --tag "${IMG}:${short_sha}" -f Dockerfile .
           done
+          docker images
         shell: bash
 
       - name: Check (Linux)
