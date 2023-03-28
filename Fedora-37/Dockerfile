@@ -120,7 +120,9 @@ RUN dnf \
       install \
         libicu \
         curl \
-        tar
+        tar \
+        vim \
+        nano
 
 # Setup the git credential manager for developer credentials.
 RUN curl -L "${GCM_LINK}" | tar -xz -C /usr/local/bin

@@ -117,7 +117,9 @@ RUN dnf \
       install \
         libicu \
         wget \
-        tar
+        tar \
+        vim \
+        nano
 
 # Setup the git credential manager for developer credentials.
 RUN wget ${GCM_LINK} -O gcm.tar.gz && tar -xvf gcm.tar.gz -C /usr/local/bin && rm gcm.tar.gz
