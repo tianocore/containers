@@ -3,6 +3,7 @@
 # Copyright (c) 2022 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 
+set -e
 
 #####################################################################
 # Run as the same uid/gid as the developer.
