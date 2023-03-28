@@ -8,7 +8,7 @@
 # multiple images to reduce the overall download size by providing images
 # tailored to the task of the CI job. Currently there are two images: "build"
 # and "test".
-# The images are indented to run on x86_64.
+# The images are intended to run on x86_64.
 
 
 # Build Image
@@ -71,7 +71,7 @@ RUN npm install -g npm \
       markdownlint-cli@${MARKDOWNLINT_VERSION}
 
 # Test Image
-# This image is indented for jobs that run tests (and possibly also build)
+# This image is intended for jobs that run tests (and possibly also build)
 # firmware images. It is based on the build image and adds Qemu for the
 # architectures under test.
 
@@ -106,7 +106,7 @@ RUN dnf \
         ninja-build
 
 # Dev Image
-# This image is indented for local use. This builds on the test image but adds
+# This image is intended for local use. This builds on the test image but adds
 # tools for local developers.
 FROM test AS dev
 ENV GCM_LINK=https://github.com/GitCredentialManager/git-credential-manager/releases/download/v2.0.785/gcm-linux_amd64.2.0.785.tar.gz

@@ -124,7 +124,7 @@ RUN mkdir /edkrepo_install && \
 COPY init_edkrepo_conf.sh /usr/bin/init_edkrepo_conf
 
 # Test Image
-# This image is indented for jobs that run tests (and possibly also build)
+# This image is intended for jobs that run tests (and possibly also build)
 # firmware images. It is based on the build image and adds Qemu for the
 # architectures under test.
 
