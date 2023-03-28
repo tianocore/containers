@@ -170,6 +170,7 @@ RUN apt-get update && \
     apt-get install --yes --no-install-recommends \
         vim \
         nano \
+        less \
         bear &&\
     apt-get clean
 
