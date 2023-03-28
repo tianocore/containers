@@ -38,6 +38,8 @@ RUN apt-get update && \
         build-essential \
         uuid-dev \
         git \
+        nasm \
+        acpica-tools \
         virtualenv \
         device-tree-compiler \
         python3.9\
