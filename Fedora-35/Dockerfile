@@ -126,3 +126,7 @@ RUN wget ${GCM_LINK} -O gcm.tar.gz && tar -xvf gcm.tar.gz -C /usr/local/bin && r
 RUN git-credential-manager-core configure
 RUN git config --global credential.credentialStore cache
 RUN cp /etc/skel/.bashrc /root/.bashrc
+
+# Set the entry point
+COPY fedora35_dev_entrypoint.sh /usr/libexec/entrypoint
+ENTRYPOINT ["/usr/libexec/entrypoint"]
