@@ -3,7 +3,6 @@
 # Copyright (c) 2023 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 
-
 #####################################################################
 # Run as the same uid/gid as the developer.
 
@@ -43,8 +42,9 @@ groupadd "${EDK2_DOCKER_USER}" -f -o -g "${user_gid}"
 #
 # - Add the user.
 useradd "${EDK2_DOCKER_USER}" -u "${user_uid}" -g "${user_gid}" \
-  -d "${EDK2_DOCKER_USER_HOME}" -M -s /bin/bash
+  -G sudo -d "${EDK2_DOCKER_USER_HOME}" -M -s /bin/bash
 
+echo "${EDK2_DOCKER_USER}":tianocore | chpasswd
 
 #####################################################################
 # Cleanup variables
