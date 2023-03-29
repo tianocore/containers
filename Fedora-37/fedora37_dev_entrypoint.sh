@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2022 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# Copyright (c) 2023 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 
 set -e
@@ -12,13 +12,9 @@ set -e
 #####################################################################
 # Check for required env
 if [ -z "${EDK2_DOCKER_USER_HOME}" ] || [ ! -d "${EDK2_DOCKER_USER_HOME}" ]; then
-  echo 'Missing EDK2_DOCKER_USER_HOME'
-  echo 'Please add the following to the docker command, before the image name, and run again'
-  # shellcheck disable=SC2016
-  echo '  -v "${HOME}":"${HOME}" -e EDK2_DOCKER_USER_HOME="${HOME}"'
-  exit 1
+  echo 'Missing EDK2_DOCKER_USER_HOME. Running as root.'
+  exec "$@"
 fi
-
 
 #####################################################################
 # Create a user to run the command
@@ -44,7 +40,7 @@ groupadd "${EDK2_DOCKER_USER}" -f -o -g "${user_gid}"
 #
 # - Add the user.
 useradd "${EDK2_DOCKER_USER}" -u "${user_uid}" -g "${user_gid}" \
-  -G sudo -d "${EDK2_DOCKER_USER_HOME}" -M -s /bin/bash
+  -G wheel -d "${EDK2_DOCKER_USER_HOME}" -M -s /bin/bash
 
 echo "${EDK2_DOCKER_USER}":tianocore | chpasswd
 
