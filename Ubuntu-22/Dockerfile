@@ -38,6 +38,7 @@ RUN apt-get update && \
         build-essential \
         uuid-dev \
         git \
+        lcov \
         nasm \
         acpica-tools \
         virtualenv \
