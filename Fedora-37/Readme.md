@@ -19,4 +19,4 @@ These images include:
 - gcc for LoongArch (2022-09-06)
 - nasm 2.15.05
 - Python 3.11
-- Qemu 7.2 (x86, arm ,aarch64)
+- Qemu 8.0.0 (x86, arm ,aarch64, loongarch)
