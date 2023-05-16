@@ -18,6 +18,9 @@ FROM ubuntu:20.04 AS build
 # Set the EDKREPO URL (and version)
 ENV EDKREPO_URL=https://github.com/tianocore/edk2-edkrepo/releases/download/edkrepo-v2.1.2/edkrepo-2.1.2.tar.gz
 
+# Set the NASM URL (and version)
+ENV NASM_URL=http://www.nasm.us/pub/nasm/releasebuilds/2.15.05/nasm-2.15.05.tar.bz2 
+
 # Suppresses a debconf error during apt-get install.
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -39,7 +42,6 @@ RUN apt-get update && \
         uuid-dev \
         git \
         lcov \
-        nasm \
         acpica-tools \
         virtualenv \
         device-tree-compiler \
@@ -107,6 +109,10 @@ RUN update-alternatives \
       --slave /usr/bin/riscv64-linux-gnu-gcov riscv64-linux-gnu-gcov /usr/bin/riscv64-linux-gnu-gcov-${GCC_MAJOR_VERSION} && \
     update-alternatives \
       --install /usr/bin/riscv64-linux-gnu-cpp riscv64-linux-gnu-cpp /usr/bin/riscv64-linux-gnu-cpp-${GCC_MAJOR_VERSION} 100
+
+# Install  nasm-2.15.05
+RUN wget -O- ${NASM_URL} | tar xfj - && cd nasm-2.15.05 && ./autogen.sh && \
+    ./configure && make && make install && cd .. && rm -rf nasm-2.15.05
 
 # Set toolchains prefix
 ENV GCC5_AARCH64_PREFIX /usr/bin/aarch64-linux-gnu-
