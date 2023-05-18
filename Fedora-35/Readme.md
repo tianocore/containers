@@ -18,4 +18,4 @@ These images include:
 - gcc 11.2.1 (x86, arm, aarch64, riscv)
 - nasm 2.15.05
 - Python 3.10
-- Qemu 6.10 (x86, arm ,aarch64)
+- Qemu v7.2.0 (x86, arm ,aarch64)

@@ -102,7 +102,8 @@ RUN dnf \
     curl "https://patchwork.ozlabs.org/project/qemu-devel/patch/20230105161804.82486-1-lersek@redhat.com/mbox/" | git apply --ignore-whitespace && \
     ./configure --target-list=x86_64-softmmu,arm-softmmu,aarch64-softmmu,loongarch64-softmmu --enable-gtk && \
     make install -j $(nproc) && \
-    rm -rf qemu-build && \
+    cd .. && \
+    rm -rf qemu && \
     dnf \
       --assumeyes \
       remove \
