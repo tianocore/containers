@@ -16,7 +16,7 @@
 # purpose image. It contains the toolchains for all supported architectures, and
 # all build dependencies.
 FROM registry.fedoraproject.org/fedora:37 AS build
-ARG GCC_VERSION=12.2.1-4.fc37
+ARG GCC_VERSION=12.3.1-1.fc37
 ARG GCC_VERSION_CROSS=12.2.1-2.fc37
 ARG NASM_VERSION=2.15.05-3.fc37
 ARG PYTHON_VERSION=3.11

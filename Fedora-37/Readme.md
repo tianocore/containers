@@ -15,8 +15,8 @@ The `dev` image in turn extends the `test` image and adds developer
 convenience tools, for example the git credential manager.
 
 These images include:
-- gcc 12.2 (x86, arm, aarch64, riscv)
-- gcc for LoongArch (2022-09-06)
+- gcc 12.3 (x86, arm, aarch64, riscv)
+- gcc 13 (LoongArch, from 2022-09-06)
 - nasm 2.15.05
 - Python 3.11
 - Qemu 8.0.0 (x86, arm ,aarch64, loongarch)
