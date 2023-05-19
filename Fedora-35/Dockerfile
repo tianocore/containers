@@ -16,7 +16,8 @@
 # purpose image. It contains the toolchains for all supported architectures, and
 # all build dependencies.
 FROM registry.fedoraproject.org/fedora-minimal:35 AS build
-ARG GCC_VERSION=11.2.1-1.fc35
+ARG GCC_VERSION=11.3.1-3.fc35
+ARG GCC_VERSION_CROSS=11.2.1-1.fc35
 ARG NASM_VERSION=2.15.05-1.fc35
 ARG PYTHON_VERSION=3.10
 ARG GCC_LOONGARCH64_URL="https://github.com/loongson/build-tools/releases/download/2022.09.06/loongarch64-clfs-6.3-cross-tools-c-only.tar.xz"
@@ -33,9 +34,9 @@ RUN dnf \
         dotnet-runtime-${DOTNET_VERSION} \
         gcc-c++-${GCC_VERSION} \
         gcc-${GCC_VERSION} \
-        gcc-aarch64-linux-gnu-${GCC_VERSION} \
-        gcc-arm-linux-gnu-${GCC_VERSION} \
-        gcc-riscv64-linux-gnu-${GCC_VERSION} \
+        gcc-aarch64-linux-gnu-${GCC_VERSION_CROSS} \
+        gcc-arm-linux-gnu-${GCC_VERSION_CROSS} \
+        gcc-riscv64-linux-gnu-${GCC_VERSION_CROSS} \
         git \
         lcov \
         libX11-devel \
