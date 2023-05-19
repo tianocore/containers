@@ -16,7 +16,7 @@
 # purpose image. It contains the toolchains for all supported architectures, and
 # all build dependencies.
 FROM registry.fedoraproject.org/fedora:37 AS build
-ARG GCC_VERSION=12.2.1-4.fc37
+ARG GCC_VERSION=12.3.1-1.fc37
 ARG GCC_VERSION_CROSS=12.2.1-2.fc37
 ARG NASM_VERSION=2.15.05-3.fc37
 ARG PYTHON_VERSION=3.11
@@ -80,7 +80,7 @@ RUN npm install -g npm \
 #Building qemu from source:
 FROM build AS test
 ARG QEMU_URL="https://gitlab.com/qemu-project/qemu.git"
-ARG QEMU_BRANCH="v7.2.0"
+ARG QEMU_BRANCH="v8.0.0"
 RUN dnf \
       --assumeyes \
       --nodocs \
@@ -99,7 +99,6 @@ RUN dnf \
         zlib-devel && \
     git clone "${QEMU_URL}" --branch "${QEMU_BRANCH}" --depth 1 qemu && \
     cd qemu && \
-    curl "https://patchwork.ozlabs.org/project/qemu-devel/patch/20230105161804.82486-1-lersek@redhat.com/mbox/" | git apply --ignore-whitespace && \
     ./configure --target-list=x86_64-softmmu,arm-softmmu,aarch64-softmmu,loongarch64-softmmu --enable-gtk && \
     make install -j $(nproc) && \
     rm -rf qemu-build && \
