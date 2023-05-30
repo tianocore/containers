@@ -162,6 +162,7 @@ RUN apt-get update && apt-get install --yes --no-install-recommends \
     tar -xf qemu-7.1.0.tar.xz --strip-components=1 && \
     ./configure --target-list=x86_64-softmmu,arm-softmmu,aarch64-softmmu,riscv32-softmmu,riscv32-linux-user,riscv64-linux-user,riscv64-softmmu && \
     make install -j $(nproc) && \
+    cd .. && \
     rm -rf qemu-build && \
     apt remove --yes \
         ninja-build

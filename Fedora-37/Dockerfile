@@ -101,7 +101,8 @@ RUN dnf \
     cd qemu && \
     ./configure --target-list=x86_64-softmmu,arm-softmmu,aarch64-softmmu,loongarch64-softmmu --enable-gtk && \
     make install -j $(nproc) && \
-    rm -rf qemu-build && \
+    cd .. && \
+    rm -rf qemu && \
     dnf \
       --assumeyes \
       remove \
