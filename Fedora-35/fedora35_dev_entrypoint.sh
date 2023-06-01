@@ -40,7 +40,7 @@ user_gid=$(stat -c "%g" "${EDK2_DOCKER_USER_HOME}")
 groupadd "${EDK2_DOCKER_USER}" -f -o -g "${user_gid}"
 #
 # - Add the user.
-useradd "${EDK2_DOCKER_USER}" -u "${user_uid}" -g "${user_gid}" \
+useradd "${EDK2_DOCKER_USER}" -o -u "${user_uid}" -g "${user_gid}" \
   -G wheel -d "${EDK2_DOCKER_USER_HOME}" -M -s /bin/bash
 
 echo "${EDK2_DOCKER_USER}":tianocore | chpasswd
