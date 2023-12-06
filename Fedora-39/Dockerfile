@@ -75,36 +75,18 @@ RUN npm install -g npm \
 # firmware images. It is based on the build image and adds Qemu for the
 # architectures under test.
 
-#Building qemu from source:
 FROM build AS test
-ARG QEMU_URL="https://gitlab.com/qemu-project/qemu.git"
-ARG QEMU_BRANCH="v8.1.3"
 RUN dnf \
       --assumeyes \
       --nodocs \
       --setopt=install_weak_deps=0 \
       install \
-        bzip2 \
-        findutils \
-        git \
-        glib2-devel \
-        gtk3-devel \
-        libfdt-devel \
-        ninja-build \
-        pixman-devel \
-        python3 \
-        tar \
-        zlib-devel && \
-    git clone "${QEMU_URL}" --branch "${QEMU_BRANCH}" --depth 1 qemu && \
-    cd qemu && \
-    ./configure --target-list=x86_64-softmmu,arm-softmmu,aarch64-softmmu,loongarch64-softmmu --enable-gtk && \
-    make install -j $(nproc) && \
-    cd .. && \
-    rm -rf qemu && \
-    dnf \
-      --assumeyes \
-      remove \
-        ninja-build
+        qemu-system-arm \
+        qemu-system-aarch64 \
+        qemu-system-loongarch64 \
+        qemu-system-x86 \
+        qemu-system-riscv \
+        qemu-ui-gtk
 
 # Dev Image
 # This image is intended for local use. This builds on the test image but adds
