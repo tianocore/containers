@@ -48,13 +48,12 @@ RUN dnf \
         python3-distutils-extra \
         python3-pip \
         python3-devel \
-        python3-setuptools \
         nodejs \
         npm \
         tar \
         sudo
 RUN alternatives --install /usr/bin/python python /usr/bin/python3 1
-RUN pip install pip lcov_cobertura setuptools --upgrade
+RUN pip install --upgrade pip lcov_cobertura setuptools
 
 ENV GCC5_AARCH64_PREFIX /usr/bin/aarch64-linux-gnu-
 ENV GCC5_ARM_PREFIX     /usr/bin/arm-linux-gnu-
