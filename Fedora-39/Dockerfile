@@ -17,10 +17,6 @@
 # purpose image. It contains the toolchains for all supported architectures, and
 # all build dependencies.
 FROM registry.fedoraproject.org/fedora:39 AS build
-ARG GCC_VERSION=13.2.1-4.fc39
-ARG GCC_VERSION_CROSS=13.2.1-1.fc39
-ARG NASM_VERSION=2.16.01-4.fc39
-ARG PYTHON_VERSION=3.12
 ARG CSPELL_VERSION=8.0.0
 ARG MARKDOWNLINT_VERSION=0.37.0
 ARG POWERSHELL_VERSION=7.4.0
@@ -33,12 +29,12 @@ RUN dnf \
         acpica-tools \
         dotnet-runtime-${DOTNET_VERSION} \
         curl \
-        gcc-c++-${GCC_VERSION} \
-        gcc-${GCC_VERSION} \
-        gcc-aarch64-linux-gnu-${GCC_VERSION_CROSS} \
-        gcc-arm-linux-gnu-${GCC_VERSION_CROSS} \
-        gcc-riscv64-linux-gnu-${GCC_VERSION_CROSS} \
-        gcc-loongarch64-linux-gnu-${GCC_VERSION_CROSS} \
+        gcc-c++ \
+        gcc \
+        gcc-aarch64-linux-gnu \
+        gcc-arm-linux-gnu \
+        gcc-riscv64-linux-gnu \
+        gcc-loongarch64-linux-gnu \
         git \
         lcov \
         libX11-devel \
@@ -46,9 +42,9 @@ RUN dnf \
         libuuid-devel \
         make \
         nuget \
-        nasm-${NASM_VERSION} \
+        nasm \
         https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell-${POWERSHELL_VERSION}-1.rh.x86_64.rpm \
-        python${PYTHON_VERSION} \
+        python3 \
         python3-distutils-extra \
         python3-pip \
         python3-devel \
