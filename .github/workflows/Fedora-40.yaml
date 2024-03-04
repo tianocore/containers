@@ -1,0 +1,27 @@
+# GitHub Action Workflow for building the Fedora 40 images.
+
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+
+name: "Fedora 40 Images"
+
+# This workflow only runs (on the main branch or on PRs targeted
+# at the main branch) and if files inside the Fedora-39 directory
+# have been modifed/added/removed...
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'Fedora-40/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'Fedora-40/**'
+
+jobs:
+  Build_Image:
+      uses: ./.github/workflows/build-image.yaml
+      with:
+        image_name: "Fedora-40"
+        sub_images: "build test dev"
