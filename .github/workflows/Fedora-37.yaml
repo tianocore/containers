@@ -1,11 +1,11 @@
-# GitHub Action Workflow for building the Fedora 35 images.
+# GitHub Action Workflow for building the Fedora 37 images.
 
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 
 name: "Fedora 37 Images"
 
 # This workflow only runs (on the main branch or on PRs targeted
-# at the main branch) and if files inside the Fedora-35 directory
+# at the main branch) and if files inside the Fedora-37 directory
 # have been modifed/added/removed...
 
 on:
