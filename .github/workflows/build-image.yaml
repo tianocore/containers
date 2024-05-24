@@ -61,7 +61,7 @@ jobs:
           for sub in $SUB_IMAGES; do
             IMG=$(tr '[:upper:]' '[:lower:]' <<< "${REGISTRY}/${REPOSITORY}/${IMAGE_NAME}-${sub}")
             echo "Building Image: ${IMG}:${short_sha}..."
-            docker build --target "${sub}" --tag "${IMG}:${short_sha}" -f Dockerfile .
+            docker build --target "${sub}" --platform linux/amd64 --tag "${IMG}:${short_sha}" -f Dockerfile .
           done
           docker images
         shell: bash
