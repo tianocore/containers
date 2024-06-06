@@ -35,10 +35,20 @@ EDK2_DOCKER_USER=${EDK2_DOCKER_USER:-edk2}
 # - Get the uid and gid from the user's home directory.
 user_uid=$(stat -c "%u" "${EDK2_DOCKER_USER_HOME}")
 user_gid=$(stat -c "%g" "${EDK2_DOCKER_USER_HOME}")
+
+if [ ${user_uid} -eq 0 ] && [ -n "${EDK2_DOCKER_UID}" ]; then
+  user_uid=${EDK2_DOCKER_UID}
+fi
+
+if [ ${user_gid} -eq 0 ] && [ -n "${EDK2_DOCKER_GID}" ]; then
+  user_gid=${EDK2_DOCKER_GID}
+fi
+
 #
 # - Add the group.  We'll take a shortcut here and always name it the same as
 # the username.  The name is cosmetic, though.  The important thing is that the
 # gid matches.
+groupdel $(getent group "${user_gid}" | awk -F ':' '{print $1}') || true
 groupadd "${EDK2_DOCKER_USER}" -f -o -g "${user_gid}"
 #
 # - Add the user.

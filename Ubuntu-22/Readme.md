@@ -7,6 +7,8 @@ It can be run like this:
 ```
 docker run -it \
        -v "${HOME}":"${HOME}" -e EDK2_DOCKER_USER_HOME="${HOME}" \
+       -e EDK2_DOCKER_USER="$(whoami)" -e EDK2_DOCKER_UID="$(id -u)" \
+       -e EDK2_DOCKER_GID="$(id -g)" \
        ghcr.io/tianocore/containers/ubuntu-22-dev:latest /bin/bash
 ```
 
@@ -14,6 +16,8 @@ To enter the container as 'root', prepend the command to run with `su`, for exam
 ```
 docker run -it \
        -v "${HOME}":"${HOME}" -e EDK2_DOCKER_USER_HOME="${HOME}" \
+       -e EDK2_DOCKER_USER="$(whoami)" -e EDK2_DOCKER_UID="$(id -u)" \
+       -e EDK2_DOCKER_GID="$(id -g)" \
        ghcr.io/tianocore/containers/ubuntu-22-dev:latest su /bin/bash
 ```
 
