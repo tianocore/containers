@@ -26,6 +26,18 @@ ENV TZ=UTC
 
 ENV GCC_MAJOR_VERSION=12
 
+# Preinstall python + dependencies as virtual environment
+RUN apt-get update && \
+    apt-get install --yes --no-install-recommends \
+      python3 \
+      virtualenv
+RUN virtualenv /opt/venv
+ENV VIRTUAL_ENV /opt/venv
+ENV PATH /opt/venv/bin:$PATH
+RUN pip install --upgrade pip \
+        -r "https://raw.githubusercontent.com/tianocore/edk2/master/pip-requirements.txt"
+
+
 # Install and update the package list
 RUN apt-get update && \
     apt-get install --yes --no-install-recommends \
@@ -44,9 +56,6 @@ RUN apt-get update && \
         virtualenv \
         device-tree-compiler \
         mono-devel \
-        python3\
-        python3-pip \
-        python3-venv \
         locales \
         gnupg \
         ca-certificates && \

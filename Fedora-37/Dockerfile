@@ -16,10 +16,25 @@
 # purpose image. It contains the toolchains for all supported architectures, and
 # all build dependencies.
 FROM registry.fedoraproject.org/fedora:37 AS build
+
+# Preinstall python + dependencies as virtual environment
+RUN dnf \
+      --assumeyes \
+      --nodocs \
+      --setopt=install_weak_deps=0 \
+      install \
+      python3 \
+      python3-virtualenv
+RUN virtualenv /opt/venv
+ENV VIRTUAL_ENV /opt/venv
+ENV PATH /opt/venv/bin:$PATH
+RUN pip install --upgrade pip \
+        -r "https://raw.githubusercontent.com/tianocore/edk2/master/pip-requirements.txt"
+
+
 ARG GCC_VERSION=12.3.1-1.fc37
 ARG GCC_VERSION_CROSS=12.2.1-2.fc37
 ARG NASM_VERSION=2.15.05-3.fc37
-ARG PYTHON_VERSION=3.11
 ARG GCC_LOONGARCH64_URL="https://github.com/loongson/build-tools/releases/download/2022.09.06/loongarch64-clfs-6.3-cross-tools-c-only.tar.xz"
 ARG CSPELL_VERSION=5.20.0
 ARG MARKDOWNLINT_VERSION=0.31.0
@@ -33,6 +48,7 @@ RUN dnf \
         acpica-tools \
         dotnet-runtime-${DOTNET_VERSION} \
         curl \
+        diffutils \
         gcc-c++-${GCC_VERSION} \
         gcc-${GCC_VERSION} \
         gcc-aarch64-linux-gnu-${GCC_VERSION_CROSS} \
@@ -47,16 +63,10 @@ RUN dnf \
         nuget \
         nasm-${NASM_VERSION} \
         https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell-${POWERSHELL_VERSION}-1.rh.x86_64.rpm \
-        python${PYTHON_VERSION} \
-        python3-distutils-extra \
-        python3-pip \
-        python3-setuptools \
         nodejs \
         npm \
         tar \
         sudo
-RUN alternatives --install /usr/bin/python python /usr/bin/python3 1
-RUN pip install pip lcov_cobertura --upgrade
 
 RUN mkdir -p /cross-tools/ && \
       curl -L "${GCC_LOONGARCH64_URL}" | \

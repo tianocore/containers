@@ -17,6 +17,22 @@
 # purpose image. It contains the toolchains for all supported architectures, and
 # all build dependencies.
 FROM registry.fedoraproject.org/fedora:39 AS build
+
+# Preinstall python + dependencies as virtual environment
+RUN dnf \
+      --assumeyes \
+      --nodocs \
+      --setopt=install_weak_deps=0 \
+      install \
+      python3 \
+      python3-virtualenv
+RUN virtualenv /opt/venv
+ENV VIRTUAL_ENV /opt/venv
+ENV PATH /opt/venv/bin:$PATH
+RUN pip install --upgrade pip \
+        -r "https://raw.githubusercontent.com/tianocore/edk2/master/pip-requirements.txt"
+
+
 ARG CSPELL_VERSION=8.0.0
 ARG MARKDOWNLINT_VERSION=0.37.0
 ARG POWERSHELL_VERSION=7.4.0
@@ -29,6 +45,7 @@ RUN dnf \
         acpica-tools \
         dotnet-runtime-${DOTNET_VERSION} \
         curl \
+        diffutils \
         gcc-c++ \
         gcc \
         gcc-aarch64-linux-gnu \
@@ -44,16 +61,10 @@ RUN dnf \
         nuget \
         nasm \
         https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell-${POWERSHELL_VERSION}-1.rh.x86_64.rpm \
-        python3 \
-        python3-distutils-extra \
-        python3-pip \
-        python3-devel \
         nodejs \
         npm \
         tar \
         sudo
-RUN alternatives --install /usr/bin/python python /usr/bin/python3 1
-RUN pip install --upgrade pip lcov_cobertura setuptools
 
 ENV GCC5_AARCH64_PREFIX /usr/bin/aarch64-linux-gnu-
 ENV GCC5_ARM_PREFIX     /usr/bin/arm-linux-gnu-
