@@ -58,11 +58,21 @@ RUN apt-get update && \
         mono-devel \
         locales \
         gnupg \
-        ca-certificates && \
+        ca-certificates
+
+RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
     apt-get install --yes --no-install-recommends \
+        g++-${GCC_MAJOR_VERSION}-aarch64-linux-gnu gcc-${GCC_MAJOR_VERSION}-aarch64-linux-gnu; \
+    fi
+
+RUN if [ "TARGETPLATFORM" = "linux/arm64" ]; then \
+    apt-get install --yes --no-install-recommends \
+        g++-${GCC_MAJOR_VERSION}-x86-64-linux-gnu gcc-${GCC_MAJOR_VERSION}-x86-64-linux-gnu; \
+    fi
+
+RUN apt-get install --yes --no-install-recommends \
         g++-${GCC_MAJOR_VERSION} gcc-${GCC_MAJOR_VERSION} \
         g++-${GCC_MAJOR_VERSION}-x86-64-linux-gnux32 gcc-${GCC_MAJOR_VERSION}-x86-64-linux-gnux32 \
-        g++-${GCC_MAJOR_VERSION}-aarch64-linux-gnu gcc-${GCC_MAJOR_VERSION}-aarch64-linux-gnu \
         g++-${GCC_MAJOR_VERSION}-riscv64-linux-gnu gcc-${GCC_MAJOR_VERSION}-riscv64-linux-gnu \
         g++-${GCC_MAJOR_VERSION}-arm-linux-gnueabi gcc-${GCC_MAJOR_VERSION}-arm-linux-gnueabi \
         g++-${GCC_MAJOR_VERSION}-arm-linux-gnueabihf gcc-${GCC_MAJOR_VERSION}-arm-linux-gnueabihf && \
