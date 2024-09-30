@@ -174,10 +174,14 @@ FROM test AS dev
 # required.
 RUN apt-get update && \
     apt-get install --yes --no-install-recommends \
-        vim \
-        nano \
+        bear \
+        clang \
         less \
-        bear &&\
+        lld \
+        llvm \
+        nano \
+        vim \
+        && \
     apt-get clean
 
 # Setup the entry point

@@ -110,7 +110,10 @@ RUN dnf \
       --setopt=install_weak_deps=0 \
       install \
         libicu \
+        clang \
         curl \
+        lld \
+        llvm \
         tar \
         vim \
         nano
