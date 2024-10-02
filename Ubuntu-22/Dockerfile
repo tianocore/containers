@@ -66,6 +66,10 @@ RUN apt-get update && \
         g++-${GCC_MAJOR_VERSION}-riscv64-linux-gnu gcc-${GCC_MAJOR_VERSION}-riscv64-linux-gnu \
         g++-${GCC_MAJOR_VERSION}-arm-linux-gnueabi gcc-${GCC_MAJOR_VERSION}-arm-linux-gnueabi \
         g++-${GCC_MAJOR_VERSION}-arm-linux-gnueabihf gcc-${GCC_MAJOR_VERSION}-arm-linux-gnueabihf && \
+    apt-get install --yes --no-install-recommends \
+        clang \
+        lld \
+        llvm && \
     apt-get upgrade -y && \
     apt-get clean &&\
     rm -rf /var/lib/apt/lists/*
@@ -175,10 +179,7 @@ FROM test AS dev
 RUN apt-get update && \
     apt-get install --yes --no-install-recommends \
         bear \
-        clang \
         less \
-        lld \
-        llvm \
         nano \
         vim \
         && \
