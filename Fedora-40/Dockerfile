@@ -44,6 +44,7 @@ RUN dnf \
       install \
         acpica-tools \
         dotnet-runtime-${DOTNET_VERSION} \
+        clang \
         curl \
         gcc-c++ \
         gcc \
@@ -56,6 +57,8 @@ RUN dnf \
         libX11-devel \
         libXext-devel \
         libuuid-devel \
+        lld \
+        llvm \
         make \
         nuget \
         nasm \
@@ -110,10 +113,7 @@ RUN dnf \
       --setopt=install_weak_deps=0 \
       install \
         libicu \
-        clang \
         curl \
-        lld \
-        llvm \
         tar \
         vim \
         nano
