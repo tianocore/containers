@@ -56,6 +56,8 @@ RUN dnf \
         libX11-devel \
         libXext-devel \
         libuuid-devel \
+        libasan \
+        libubsan \
         make \
         nuget \
         nasm \
