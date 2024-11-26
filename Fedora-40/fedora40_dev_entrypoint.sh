@@ -40,6 +40,11 @@ useradd "${EDK2_DOCKER_USER}" -o -l -u "${user_uid}" -g "${user_gid}" \
 
 echo "${EDK2_DOCKER_USER}":tianocore | chpasswd
 
+# Adjust owner of the pre-initialized Python virtual env
+if [ -d "${VIRTUAL_ENV}" ]; then
+  chown --recursive "${EDK2_DOCKER_USER}" "${VIRTUAL_ENV}"
+fi
+
 #####################################################################
 # Cleanup variables
 unset user_uid
