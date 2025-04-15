@@ -1,4 +1,4 @@
-# Copyright (c) 2023 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# Copyright (c) 2023-2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # Copyright (c) 2025 Yuki Kurosawa. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 
@@ -117,6 +117,10 @@ RUN \
       --install /usr/bin/riscv64-linux-gnu-cpp riscv64-linux-gnu-cpp /usr/bin/riscv64-linux-gnu-cpp-${GCC_MAJOR_VERSION} 100
 
 # Set toolchains prefix
+ENV GCC_AARCH64_PREFIX  /usr/bin/aarch64-linux-gnu-
+ENV GCC_ARM_PREFIX      /usr/bin/arm-linux-gnueabi-
+ENV GCC_RISCV64_PREFIX  /usr/bin/riscv64-linux-gnu-
+# - Also set GCC5, which is deprecated, but still in use.
 ENV GCC5_AARCH64_PREFIX /usr/bin/aarch64-linux-gnu-
 ENV GCC5_ARM_PREFIX     /usr/bin/arm-linux-gnueabi-
 ENV GCC5_RISCV64_PREFIX /usr/bin/riscv64-linux-gnu-
