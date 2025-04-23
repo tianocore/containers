@@ -1,6 +1,7 @@
 #!/bin/bash
 #
 # Copyright (c) 2023 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# Copyright (c) 2025 Yuki Kurosawa. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 
 #####################################################################

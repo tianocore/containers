@@ -1,7 +1,8 @@
 # Copyright (c) 2023 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# Copyright (c) 2025 Yuki Kurosawa. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 
-# Build ubuntu22-based container images for use when building EDK2:
+# Build ubuntu24-based container images for use when building EDK2:
 # - build.  This image has the basic set of tools required to build EDK2.  It's
 # appropriate for use in CI pipelines and other automation.
 # - dev.  This image is the build image, plus a few developer-friendly
