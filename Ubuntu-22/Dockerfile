@@ -26,15 +26,21 @@ ENV TZ=UTC
 
 ENV GCC_MAJOR_VERSION=12
 
+# Install utilities
+COPY "apt_cleanup.sh" "/usr/local/bin/"
+RUN cd /usr/local/bin && \
+    mv apt_cleanup.sh apt_cleanup && chmod 755 apt_cleanup
+
 # Preinstall python + dependencies as virtual environment
 RUN apt-get update && \
     apt-get install --yes --no-install-recommends \
       python3 \
-      virtualenv
+      virtualenv && \
+    apt_cleanup
 RUN virtualenv /opt/venv
 ENV VIRTUAL_ENV /opt/venv
 ENV PATH /opt/venv/bin:$PATH
-RUN pip install --upgrade pip \
+RUN pip install --no-cache-dir --upgrade pip \
         -r "https://raw.githubusercontent.com/tianocore/edk2/master/pip-requirements.txt"
 
 
@@ -67,8 +73,7 @@ RUN apt-get update && \
         g++-${GCC_MAJOR_VERSION}-arm-linux-gnueabi gcc-${GCC_MAJOR_VERSION}-arm-linux-gnueabi \
         g++-${GCC_MAJOR_VERSION}-arm-linux-gnueabihf gcc-${GCC_MAJOR_VERSION}-arm-linux-gnueabihf && \
     apt-get upgrade -y && \
-    apt-get clean &&\
-    rm -rf /var/lib/apt/lists/*
+    apt_cleanup
 
 RUN \
     update-alternatives \
@@ -167,7 +172,9 @@ RUN apt-get update && apt-get install --yes --no-install-recommends \
     cd .. && \
     rm -rf qemu-build && \
     apt remove --yes \
-        ninja-build
+        ninja-build && \
+    apt_cleanup
+
 
 #####################################################################
 # Dev Image
@@ -175,7 +182,7 @@ RUN apt-get update && apt-get install --yes --no-install-recommends \
 FROM test AS dev
 
 # Install convenience tools.  Things we like having around, but aren't
-# required.
+# required.pt
 RUN apt-get update && \
     apt-get install --yes --no-install-recommends \
         bear \
@@ -186,7 +193,7 @@ RUN apt-get update && \
         nano \
         vim \
         && \
-    apt-get clean
+    apt_cleanup
 
 # Setup the entry point
 COPY ubuntu22_dev_entrypoint.sh /usr/libexec/entrypoint
