@@ -73,9 +73,15 @@ RUN dnf \
 RUN alternatives --install /usr/bin/python python /usr/bin/python3 1
 RUN pip install --upgrade pip lcov_cobertura setuptools
 
-ENV GCC5_AARCH64_PREFIX /usr/bin/aarch64-linux-gnu-
-ENV GCC5_ARM_PREFIX     /usr/bin/arm-linux-gnu-
-ENV GCC5_RISCV64_PREFIX /usr/bin/riscv64-linux-gnu-
+# Set toolchains prefix
+ENV GCC_AARCH64_PREFIX      /usr/bin/aarch64-linux-gnu-
+ENV GCC_ARM_PREFIX          /usr/bin/arm-linux-gnu-
+ENV GCC_RISCV64_PREFIX      /usr/bin/riscv64-linux-gnu-
+ENV GCC_LOONGARCH64_PREFIX  /usr/bin/loongarch64-linux-gnu-
+# - Also set GCC5, which is deprecated, but still in use.
+ENV GCC5_AARCH64_PREFIX     /usr/bin/aarch64-linux-gnu-
+ENV GCC5_ARM_PREFIX         /usr/bin/arm-linux-gnu-
+ENV GCC5_RISCV64_PREFIX     /usr/bin/riscv64-linux-gnu-
 ENV GCC5_LOONGARCH64_PREFIX /usr/bin/loongarch64-linux-gnu-
 
 # Tools used by build extensions.
