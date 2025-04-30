@@ -5,7 +5,7 @@
 name: "Fedora 40 Images"
 
 # This workflow only runs (on the main branch or on PRs targeted
-# at the main branch) and if files inside the Fedora-39 directory
+# at the main branch) and if files inside the Fedora-40 directory
 # have been modifed/added/removed...
 
 on:
