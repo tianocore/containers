@@ -1,11 +1,11 @@
-# GitHub Action Workflow for building the Ubuntu 24 images.
+# GitHub Action Workflow for building the Fedora 41 images.
 
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 
-name: "Ubuntu 24 Images"
+name: "Fedora 41 Images"
 
 # This workflow only runs (on the main branch or on PRs targeted
-# at the main branch) and if files inside the Ubuntu-24 directory
+# at the main branch) and if files inside the Fedora-41 directory
 # have been modifed/added/removed...
 
 on:
@@ -13,15 +13,15 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'Ubuntu-24/**'
+      - 'Fedora-41/**'
   pull_request:
     branches: [ main ]
     paths:
-      - 'Ubuntu-24/**'
+      - 'Fedora-41/**'
 
 jobs:
   Build_Image:
       uses: ./.github/workflows/build-image.yaml
       with:
-        image_name: "Ubuntu-24"
-        sub_images: "dev test build"
+        image_name: "Fedora-41"
+        sub_images: "build test dev"

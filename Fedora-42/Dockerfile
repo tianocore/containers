@@ -16,10 +16,10 @@
 # This image is intended for jobs that compile the source code and as a general
 # purpose image. It contains the toolchains for all supported architectures, and
 # all build dependencies.
-FROM registry.fedoraproject.org/fedora:40 AS build
+FROM registry.fedoraproject.org/fedora:42 AS build
 
 # Preinstall python + dependencies as virtual environment
-RUN --mount=type=cache,target=/var/cache/dnf,sharing=locked \
+RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
     dnf \
       --assumeyes \
       --nodocs \
@@ -39,7 +39,7 @@ ARG CSPELL_VERSION=8.0.0
 ARG MARKDOWNLINT_VERSION=0.37.0
 ARG POWERSHELL_VERSION=7.4.1
 ARG DOTNET_VERSION=8.0
-RUN --mount=type=cache,target=/var/cache/dnf,sharing=locked \
+RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
     dnf \
       --assumeyes \
       --nodocs \
@@ -100,7 +100,7 @@ RUN --mount=type=cache,target=/root/.npm \
 # architectures under test.
 
 FROM build AS test
-RUN --mount=type=cache,target=/var/cache/dnf,sharing=locked \
+RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
     dnf \
       --assumeyes \
       --nodocs \
@@ -118,7 +118,7 @@ RUN --mount=type=cache,target=/var/cache/dnf,sharing=locked \
 # tools for local developers.
 FROM test AS dev
 ENV GCM_LINK=https://github.com/GitCredentialManager/git-credential-manager/releases/download/v2.0.785/gcm-linux_amd64.2.0.785.tar.gz
-RUN --mount=type=cache,target=/var/cache/dnf,sharing=locked \
+RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
     dnf \
       --assumeyes \
       --nodocs \
@@ -140,5 +140,5 @@ RUN git config --global credential.credentialStore cache
 RUN cp /etc/skel/.bashrc /root/.bashrc
 
 # Set the entry point
-COPY fedora40_dev_entrypoint.sh /usr/libexec/entrypoint
+COPY fedora42_dev_entrypoint.sh /usr/libexec/entrypoint
 ENTRYPOINT ["/usr/libexec/entrypoint"]
