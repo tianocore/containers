@@ -19,7 +19,8 @@
 FROM registry.fedoraproject.org/fedora:41 AS build
 
 # Preinstall python + dependencies as virtual environment
-RUN dnf \
+RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
+    dnf \
       --assumeyes \
       --nodocs \
       --setopt=install_weak_deps=0 \
@@ -29,7 +30,8 @@ RUN dnf \
 RUN virtualenv /opt/venv
 ENV VIRTUAL_ENV /opt/venv
 ENV PATH /opt/venv/bin:$PATH
-RUN pip install --upgrade pip \
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --upgrade pip \
         -r "https://raw.githubusercontent.com/tianocore/edk2/master/pip-requirements.txt"
 
 
@@ -37,7 +39,8 @@ ARG CSPELL_VERSION=8.19.2
 ARG MARKDOWNLINT_VERSION=0.44.0
 ARG POWERSHELL_VERSION=7.5.0
 ARG DOTNET_VERSION=9.0
-RUN dnf \
+RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
+    dnf \
       --assumeyes \
       --nodocs \
       --setopt=install_weak_deps=0 \
@@ -71,7 +74,8 @@ RUN dnf \
         tar \
         sudo
 RUN alternatives --install /usr/bin/python python /usr/bin/python3 1
-RUN pip install --upgrade pip lcov_cobertura setuptools
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --upgrade pip lcov_cobertura setuptools
 
 # Set toolchains prefix
 ENV GCC_AARCH64_PREFIX      /usr/bin/aarch64-linux-gnu-
@@ -85,7 +89,8 @@ ENV GCC5_RISCV64_PREFIX     /usr/bin/riscv64-linux-gnu-
 ENV GCC5_LOONGARCH64_PREFIX /usr/bin/loongarch64-linux-gnu-
 
 # Tools used by build extensions.
-RUN npm install -g npm \
+RUN --mount=type=cache,target=/root/.npm \
+    npm install -g npm \
       cspell@${CSPELL_VERSION} \
       markdownlint-cli@${MARKDOWNLINT_VERSION}
 
@@ -95,7 +100,8 @@ RUN npm install -g npm \
 # architectures under test.
 
 FROM build AS test
-RUN dnf \
+RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
+    dnf \
       --assumeyes \
       --nodocs \
       --setopt=install_weak_deps=0 \
@@ -112,7 +118,8 @@ RUN dnf \
 # tools for local developers.
 FROM test AS dev
 ENV GCM_LINK=https://github.com/GitCredentialManager/git-credential-manager/releases/download/v2.0.785/gcm-linux_amd64.2.0.785.tar.gz
-RUN dnf \
+RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
+    dnf \
       --assumeyes \
       --nodocs \
       --setopt=install_weak_deps=0 \
