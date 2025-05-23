@@ -15,7 +15,7 @@ The `dev` image in turn extends the `test` image and adds developer
 convenience tools, for example the git credential manager.
 
 These images include:
-- gcc 14.0.1 (x86, arm, aarch64, riscv, loongarch64)
+- gcc 14.1.1 (x86, arm, aarch64, riscv, loongarch64)
 - nasm 2.16.01
-- Python 3.12.2
+- Python 3.12.10
 - Qemu 8.2 (x86, arm, aarch64, loongarch64)
