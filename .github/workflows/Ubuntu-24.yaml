@@ -1,11 +1,11 @@
-# GitHub Action Workflow for building the Ubuntu 22 images.
+# GitHub Action Workflow for building the Ubuntu 24 images.
 
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 
 name: "Ubuntu 24 Images"
 
 # This workflow only runs (on the main branch or on PRs targeted
-# at the main branch) and if files inside the Ubuntu-22 directory
+# at the main branch) and if files inside the Ubuntu-24 directory
 # have been modifed/added/removed...
 
 on:
