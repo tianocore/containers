@@ -7,7 +7,7 @@
 # should have a matching top-level workflow yaml file.
 
 
-name: "Build and Push images"
+name: "Build and Push images for AArch64"
 
 on:
   workflow_call:
@@ -25,7 +25,7 @@ on:
         type: string
         required: false
         description: "The OS used to build the docker image."
-        default: "ubuntu-latest"
+        default: "ubuntu-24.04-arm"
 
 env:
   REGISTRY: ghcr.io
