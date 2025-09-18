@@ -18,23 +18,6 @@
 # all build dependencies.
 FROM registry.fedoraproject.org/fedora:41 AS build
 
-# Preinstall python + dependencies as virtual environment
-RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
-    dnf \
-      --assumeyes \
-      --nodocs \
-      --setopt=install_weak_deps=0 \
-      install \
-      python3 \
-      python3-virtualenv
-RUN virtualenv /opt/venv
-ENV VIRTUAL_ENV /opt/venv
-ENV PATH /opt/venv/bin:$PATH
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --upgrade pip \
-        -r "https://raw.githubusercontent.com/tianocore/edk2/master/pip-requirements.txt"
-
-
 ARG CSPELL_VERSION=8.19.2
 ARG MARKDOWNLINT_VERSION=0.44.0
 ARG POWERSHELL_VERSION=7.5.0
@@ -74,6 +57,23 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
         tar \
         sudo
 RUN alternatives --install /usr/bin/python python /usr/bin/python3 1
+
+# Preinstall python + dependencies as virtual environment
+RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
+    dnf \
+      --assumeyes \
+      --nodocs \
+      --setopt=install_weak_deps=0 \
+      install \
+      python3 \
+      python3-virtualenv
+RUN virtualenv /opt/venv
+ENV VIRTUAL_ENV /opt/venv
+ENV PATH /opt/venv/bin:$PATH
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --upgrade pip \
+        -r "https://raw.githubusercontent.com/tianocore/edk2/master/pip-requirements.txt"
+
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --upgrade pip lcov_cobertura setuptools
 
