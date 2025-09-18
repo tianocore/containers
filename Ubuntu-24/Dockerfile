@@ -30,19 +30,24 @@ ENV TZ=UTC
 ENV GCC_MAJOR_VERSION=13
 
 # Preinstall python + dependencies as virtual environment
-RUN apt-get update && \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && \
     apt-get install --yes --no-install-recommends \
       python3 python3-venv\
       virtualenv
 RUN virtualenv /opt/venv
 ENV VIRTUAL_ENV /opt/venv
 ENV PATH /opt/venv/bin:$PATH
-RUN pip install --upgrade pip \
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --upgrade pip \
         -r "https://raw.githubusercontent.com/tianocore/edk2/master/pip-requirements.txt"
 
 
 # Install and update the package list
-RUN apt-get update && \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && \
     apt-get install --yes --no-install-recommends \
         software-properties-common \
         apt-utils \
@@ -69,9 +74,7 @@ RUN apt-get update && \
         g++-${GCC_MAJOR_VERSION}-riscv64-linux-gnu gcc-${GCC_MAJOR_VERSION}-riscv64-linux-gnu \
         g++-${GCC_MAJOR_VERSION}-arm-linux-gnueabi gcc-${GCC_MAJOR_VERSION}-arm-linux-gnueabi \
         g++-${GCC_MAJOR_VERSION}-arm-linux-gnueabihf gcc-${GCC_MAJOR_VERSION}-arm-linux-gnueabihf && \
-    apt-get upgrade -y && \
-    apt-get clean &&\
-    rm -rf /var/lib/apt/lists/*
+    apt-get upgrade -y
 
 RUN \
     update-alternatives \
@@ -151,7 +154,9 @@ COPY init_edkrepo_conf.sh /usr/bin/init_edkrepo_conf
 #Building qemu from source:
 FROM build AS test
 ARG QEMU_URL="https://download.qemu.org/qemu-9.1.1.tar.xz"
-RUN apt-get update && apt-get install --yes --no-install-recommends \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && apt-get install --yes --no-install-recommends \
         autoconf \
         automake \
         autotools-dev \
@@ -170,7 +175,7 @@ RUN apt-get update && apt-get install --yes --no-install-recommends \
     make install -j $(nproc) && \
     cd .. && \
     rm -rf qemu-build && \
-    apt remove --yes \
+    apt remove --yes --purge \
         ninja-build
 
 #####################################################################
@@ -180,7 +185,9 @@ FROM test AS dev
 
 # Install convenience tools.  Things we like having around, but aren't
 # required.
-RUN apt-get update && \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && \
     apt-get install --yes --no-install-recommends \
         bear \
         clang \
@@ -189,9 +196,7 @@ RUN apt-get update && \
         llvm \
         nano \
         vim \
-        cmake \
-        && \
-    apt-get clean
+        cmake
 
 # Setup the entry point
 COPY ubuntu24_dev_entrypoint.sh /usr/libexec/entrypoint
