@@ -23,7 +23,7 @@ fi
 # fixups / workarounds:
 #   removing these files will use gcc from the image and not download it and
 #   run into the python tar bug.
-rm -f BaseTools/Bin/gcc_arm_linux_ext_dep.yaml BaseTools/Bin/gcc_aarch64_linux_ext_dep.yaml
+rm -f BaseTools/Bin/gcc_aarch64_linux_ext_dep.yaml
 
 python -m pip install --upgrade pip
 python -m pip install --upgrade -r pip-requirements.txt
@@ -47,4 +47,3 @@ build_step() {
 
 build_step "OvmfPkg/PlatformCI/PlatformBuild.py"  "X64"
 build_step "ArmVirtPkg/PlatformCI/QemuBuild.py"   "AARCH64"
-build_step "ArmVirtPkg/PlatformCI/QemuBuild.py"   "ARM"

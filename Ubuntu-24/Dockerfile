@@ -29,21 +29,6 @@ ENV TZ=UTC
 
 ENV GCC_MAJOR_VERSION=13
 
-# Preinstall python + dependencies as virtual environment
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    apt-get update && \
-    apt-get install --yes --no-install-recommends \
-      python3 python3-venv\
-      virtualenv
-RUN virtualenv /opt/venv
-ENV VIRTUAL_ENV /opt/venv
-ENV PATH /opt/venv/bin:$PATH
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --upgrade pip \
-        -r "https://raw.githubusercontent.com/tianocore/edk2/master/pip-requirements.txt"
-
-
 # Install and update the package list
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
@@ -118,6 +103,22 @@ RUN \
       --slave /usr/bin/riscv64-linux-gnu-gcov riscv64-linux-gnu-gcov /usr/bin/riscv64-linux-gnu-gcov-${GCC_MAJOR_VERSION} && \
     update-alternatives \
       --install /usr/bin/riscv64-linux-gnu-cpp riscv64-linux-gnu-cpp /usr/bin/riscv64-linux-gnu-cpp-${GCC_MAJOR_VERSION} 100
+
+# Preinstall python + dependencies as virtual environment
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && \
+    apt-get install --yes --no-install-recommends \
+      python3 \
+      python3-venv \
+      python3-dev\
+      virtualenv
+RUN virtualenv /opt/venv
+ENV VIRTUAL_ENV /opt/venv
+ENV PATH /opt/venv/bin:$PATH
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --upgrade pip \
+        -r "https://raw.githubusercontent.com/tianocore/edk2/master/pip-requirements.txt"
 
 # Set toolchains prefix
 ENV GCC_AARCH64_PREFIX  /usr/bin/aarch64-linux-gnu-
