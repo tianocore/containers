@@ -59,6 +59,10 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         g++-${GCC_MAJOR_VERSION}-riscv64-linux-gnu gcc-${GCC_MAJOR_VERSION}-riscv64-linux-gnu \
         g++-${GCC_MAJOR_VERSION}-arm-linux-gnueabi gcc-${GCC_MAJOR_VERSION}-arm-linux-gnueabi \
         g++-${GCC_MAJOR_VERSION}-arm-linux-gnueabihf gcc-${GCC_MAJOR_VERSION}-arm-linux-gnueabihf && \
+    apt-get install --yes --no-install-recommends \
+        clang \
+        lld \
+        llvm && \
     apt-get upgrade -y
 
 RUN \
@@ -191,10 +195,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update && \
     apt-get install --yes --no-install-recommends \
         bear \
-        clang \
         less \
-        lld \
-        llvm \
         nano \
         vim \
         cmake
