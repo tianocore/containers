@@ -29,6 +29,7 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
       install \
         acpica-tools \
         dotnet-runtime-${DOTNET_VERSION} \
+        clang \
         curl \
         gcc-c++ \
         gcc \
@@ -43,6 +44,8 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
         libuuid-devel \
         libasan \
         libubsan \
+        lld \
+        llvm \
         make \
         nuget \
         nasm \
@@ -124,10 +127,7 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
       --setopt=install_weak_deps=0 \
       install \
         libicu \
-        clang \
         curl \
-        lld \
-        llvm \
         tar \
         vim \
         nano
