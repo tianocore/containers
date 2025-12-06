@@ -5,7 +5,7 @@
 name: "Fedora 43 AArch64 Images"
 
 # This workflow only runs (on the main branch or on PRs targeted
-# at the main branch) and if files inside the Fedora-43-AArch64 directory
+# at the main branch) and if files inside the Fedora-43 directory
 # have been modifed/added/removed...
 
 on:
@@ -13,15 +13,18 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'Fedora-43-AArch64/**'
+      - 'Fedora-43/**'
   pull_request:
     branches: [ main ]
     paths:
-      - 'Fedora-43-AArch64/**'
+      - 'Fedora-43/**'
 
 jobs:
   Build_Image:
-      uses: ./.github/workflows/build-image-AArch64.yaml
+      uses: ./.github/workflows/build-image.yaml
       with:
-        image_name: "Fedora-43-AArch64"
+        image_base_name: "Fedora-43"
+        image_suffix: "-aarch64"
         sub_images: "build test dev"
+        runs_on: "ubuntu-24.04-arm"
+        target_platform: "linux/arm64"
