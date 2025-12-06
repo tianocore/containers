@@ -12,26 +12,38 @@ name: "Build and Push images"
 on:
   workflow_call:
     inputs:
-      image_name:
+      image_base_name:
         type: string
         required: true
-        description: "Name of the image to build (= folder name)"
+        description: "Base name of the image to build (= folder name)."
+      image_suffix:
+        type: string
+        required: false
+        description: "Arch specific suffix for built image."
+        default: ""
       sub_images:
         type: string
         required: false
-        description: "Space-separated list of sub-image names. Can not be empty."
+        description: "Space-separated list of sub-image names. Cannot be empty."
         default: "build"
       runs_on:
         type: string
         required: false
         description: "The OS used to build the docker image."
         default: "ubuntu-latest"
+      target_platform:
+        type: string
+        required: false
+        description: "Passed via --platform to Dockerfile to allow extracting specified platform from base image."
+        default: "linux/amd64"
 
 env:
   REGISTRY: ghcr.io
   REPOSITORY: ${{ github.repository }}
-  IMAGE_NAME: ${{ inputs.image_name }}
+  IMAGE_BASE_NAME: ${{ inputs.image_base_name }}
+  IMAGE_SUFFIX: ${{ inputs.image_suffix }}
   SUB_IMAGES: ${{ inputs.sub_images }}
+  TARGET_PLATFORM: ${{ inputs.target_platform }}
 
 jobs:
   build-and-push-image:
@@ -57,11 +69,14 @@ jobs:
 
       - name: Build
         run: |
-          cd "${IMAGE_NAME}"
+          cd "${IMAGE_BASE_NAME}"
           for sub in $SUB_IMAGES; do
-            IMG=$(tr '[:upper:]' '[:lower:]' <<< "${REGISTRY}/${REPOSITORY}/${IMAGE_NAME}-${sub}")
+            IMG=$(tr '[:upper:]' '[:lower:]' <<< "${REGISTRY}/${REPOSITORY}/${IMAGE_BASE_NAME}${IMAGE_SUFFIX}-${sub}")
             echo "Building Image: ${IMG}:${short_sha}..."
-            docker build --target "${sub}" --tag "${IMG}:${short_sha}" -f Dockerfile .
+            docker build \
+              --target "${sub}" --tag "${IMG}:${short_sha}" \
+              --platform ${TARGET_PLATFORM} \
+              -f Dockerfile .
           done
           docker images
         shell: bash
@@ -71,7 +86,7 @@ jobs:
         run: |
           # Only check the last sub-image in the list (for now)
           sub=${SUB_IMAGES##* }
-          IMG=$(tr '[:upper:]' '[:lower:]' <<< "${REGISTRY}/${REPOSITORY}/${IMAGE_NAME}-${sub}:${short_sha}")
+          IMG=$(tr '[:upper:]' '[:lower:]' <<< "${REGISTRY}/${REPOSITORY}/${IMAGE_BASE_NAME}${IMAGE_SUFFIX}-${sub}:${short_sha}")
           echo "Launching ${IMG}..."
           docker run \
             --rm \
@@ -85,7 +100,7 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
           for sub in $SUB_IMAGES; do
-            IMG=$(tr '[:upper:]' '[:lower:]' <<< "${REGISTRY}/${REPOSITORY}/${IMAGE_NAME}-${sub}")
+            IMG=$(tr '[:upper:]' '[:lower:]' <<< "${REGISTRY}/${REPOSITORY}/${IMAGE_BASE_NAME}${IMAGE_SUFFIX}-${sub}")
             echo "Pushing Image: ${IMG}:${short_sha}..."
             docker tag "${IMG}:${short_sha}" "${IMG}:latest"
             docker push "${IMG}:${short_sha}"
