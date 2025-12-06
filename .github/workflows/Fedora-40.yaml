@@ -23,5 +23,5 @@ jobs:
   Build_Image:
       uses: ./.github/workflows/build-image.yaml
       with:
-        image_name: "Fedora-40"
+        image_base_name: "Fedora-40"
         sub_images: "build test dev"

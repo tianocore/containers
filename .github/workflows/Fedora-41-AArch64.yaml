@@ -10,20 +10,21 @@ name: "Fedora 41 AArch64 Images"
 
 on:
   workflow_dispatch:
-
   push:
-    branches: [ '**' ]  # Match all branches
+    branches: [ main ]
     paths:
-      - 'Fedora-41-AArch64/**'
-
+      - 'Fedora-41/**'
   pull_request:
-    branches: [ '**' ]  # Match PRs targeting any branch
+    branches: [ main ]
     paths:
-      - 'Fedora-41-AArch64/**'
+      - 'Fedora-41/**'
 
 jobs:
   Build_Image:
-      uses: ./.github/workflows/build-image-AArch64.yaml
+      uses: ./.github/workflows/build-image.yaml
       with:
-        image_name: "Fedora-41-AArch64"
+        image_base_name: "Fedora-41"
+        image_suffix: "-aarch64"
         sub_images: "build test dev"
+        runs_on: "ubuntu-24.04-arm"
+        target_platform: "linux/arm64"
