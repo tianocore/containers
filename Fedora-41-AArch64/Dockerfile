@@ -89,6 +89,9 @@ ENV GCC5_AARCH64_PREFIX     /usr/bin/aarch64-linux-gnu-
 ENV GCC5_ARM_PREFIX         /usr/bin/arm-linux-gnu-
 ENV GCC5_RISCV64_PREFIX     /usr/bin/riscv64-linux-gnu-
 ENV GCC5_LOONGARCH64_PREFIX /usr/bin/loongarch64-linux-gnu-
+# Set additional prefixes required by OvmfPkg
+ENV GCC_BIN                 /usr/bin/x86_64-linux-gnu-
+ENV GCC5_BIN                /usr/bin/x86_64-linux-gnu-
 
 # Tools used by build extensions.
 RUN --mount=type=cache,target=/root/.npm \
