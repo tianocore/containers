@@ -5,19 +5,17 @@
 name: "Fedora 41 AArch64 Images"
 
 # This workflow only runs (on the main branch or on PRs targeted
-# at the main branch) and if files inside the Fedora-41 directory
+# at the main branch) and if files inside the Fedora-41-AArch64 directory
 # have been modifed/added/removed...
 
 on:
   workflow_dispatch:
-
   push:
-    branches: [ '**' ]  # Match all branches
+    branches: [ main ]
     paths:
       - 'Fedora-41-AArch64/**'
-
   pull_request:
-    branches: [ '**' ]  # Match PRs targeting any branch
+    branches: [ main ]
     paths:
       - 'Fedora-41-AArch64/**'
 
