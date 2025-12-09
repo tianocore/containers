@@ -23,5 +23,5 @@ jobs:
   Build_Image:
       uses: ./.github/workflows/build-image.yaml
       with:
-        image_name: "Ubuntu-22"
+        image_base_name: "Ubuntu-22"
         sub_images: "dev test build"

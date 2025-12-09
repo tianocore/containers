@@ -45,7 +45,5 @@ build_step() {
   stuart_build $opts -c "${build}" -a "${arch}"
 }
 
-if [ "$(uname -m)" = "x86_64" ]; then
-  build_step "OvmfPkg/PlatformCI/PlatformBuild.py" "X64"
-fi
+build_step "OvmfPkg/PlatformCI/PlatformBuild.py" "X64"
 build_step "ArmVirtPkg/PlatformCI/QemuBuild.py"   "AARCH64"

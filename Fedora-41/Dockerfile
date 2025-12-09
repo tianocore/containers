@@ -2,6 +2,8 @@
 #
 # Copyright (C) 2022, Red Hat, Inc.
 # Copyright (c) 2023 Loongson Technology Corporation Limited. All rights reserved.
+# Copyright (c) 2025 Damien Chen <inkfan130924783@gmail.com>. All rights reserved.
+# Copyright (c) 2025, Mike Beaton <mjsbeaton@gmail.com>.
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
 # This file contains the definitions for images to be used for different
@@ -9,7 +11,7 @@
 # multiple images to reduce the overall download size by providing images
 # tailored to the task of the CI job. Currently there are two images: "build"
 # and "test".
-# The images are intended to run on x86_64.
+# The images are intended to run on x86_64 or AArch64.
 
 
 # Build Image
@@ -37,6 +39,7 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
         gcc-arm-linux-gnu \
         gcc-riscv64-linux-gnu \
         gcc-loongarch64-linux-gnu \
+        gcc-x86_64-linux-gnu \
         git \
         lcov \
         libX11-devel \
@@ -47,7 +50,6 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
         make \
         nuget \
         nasm \
-        https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell-${POWERSHELL_VERSION}-1.rh.x86_64.rpm \
         python3 \
         python3-distutils-extra \
         python3-pip \
@@ -56,6 +58,16 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
         npm \
         tar \
         sudo
+RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
+  if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
+    dnf \
+      --assumeyes \
+      --nodocs \
+      --setopt=install_weak_deps=0 \
+      install \
+        https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell-${POWERSHELL_VERSION}-1.rh.x86_64.rpm \
+      ; \
+  fi
 RUN alternatives --install /usr/bin/python python /usr/bin/python3 1
 
 # Preinstall python + dependencies as virtual environment
@@ -78,15 +90,20 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --upgrade pip lcov_cobertura setuptools
 
 # Set toolchains prefix
+ENV GCC_X64_PREFIX          /usr/bin/x86_64-linux-gnu-
 ENV GCC_AARCH64_PREFIX      /usr/bin/aarch64-linux-gnu-
 ENV GCC_ARM_PREFIX          /usr/bin/arm-linux-gnu-
 ENV GCC_RISCV64_PREFIX      /usr/bin/riscv64-linux-gnu-
 ENV GCC_LOONGARCH64_PREFIX  /usr/bin/loongarch64-linux-gnu-
 # - Also set GCC5, which is deprecated, but still in use.
+ENV GCC5_X64_PREFIX         /usr/bin/x86_64-linux-gnu-
 ENV GCC5_AARCH64_PREFIX     /usr/bin/aarch64-linux-gnu-
 ENV GCC5_ARM_PREFIX         /usr/bin/arm-linux-gnu-
 ENV GCC5_RISCV64_PREFIX     /usr/bin/riscv64-linux-gnu-
 ENV GCC5_LOONGARCH64_PREFIX /usr/bin/loongarch64-linux-gnu-
+# Set additional prefixes required by OvmfPkg
+ENV GCC_BIN                 /usr/bin/x86_64-linux-gnu-
+ENV GCC5_BIN                /usr/bin/x86_64-linux-gnu-
 
 # Tools used by build extensions.
 RUN --mount=type=cache,target=/root/.npm \
@@ -134,10 +151,13 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
         nano
 
 # Setup the git credential manager for developer credentials.
-RUN curl -L "${GCM_LINK}" | tar -xz -C /usr/local/bin
-RUN git-credential-manager-core configure
-RUN git config --global credential.credentialStore cache
-RUN cp /etc/skel/.bashrc /root/.bashrc
+RUN \
+  if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
+    (curl -L "${GCM_LINK}" | tar -xz -C /usr/local/bin) ; \
+    git-credential-manager-core configure ; \
+    git config --global credential.credentialStore cache ; \
+    cp /etc/skel/.bashrc /root/.bashrc ; \
+  fi
 
 # Set the entry point
 COPY fedora41_dev_entrypoint.sh /usr/libexec/entrypoint

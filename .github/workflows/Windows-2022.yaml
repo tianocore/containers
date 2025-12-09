@@ -23,6 +23,7 @@ jobs:
   Build_Image:
       uses: ./.github/workflows/build-image.yaml
       with:
-        image_name: "Windows-2022"
+        image_base_name: "Windows-2022"
         sub_images: "build"
         runs_on: "windows-latest"
+        target_platform: "windows/amd64"

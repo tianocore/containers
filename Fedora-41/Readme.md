@@ -6,7 +6,7 @@ The first two are primarily intended for automated builds
 and CI usage.
 
 The `build` image contains the compilers and build tools
-needed for building EDK2 under Linux (x86_64).
+needed for building EDK2 under Linux (x86_64 or AArch64).
 
 The `test` image extends the `build` image and adds Qemu for
 testing purposes.
