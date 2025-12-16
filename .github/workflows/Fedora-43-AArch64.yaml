@@ -1,8 +1,8 @@
-# GitHub Action Workflow for building the Fedora 43 images.
+# GitHub Action Workflow for building the Fedora 43 AArch64 images.
 
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 
-name: "Fedora 43 Images"
+name: "Fedora 43 AArch64 Images"
 
 # This workflow only runs (on the main branch or on PRs targeted
 # at the main branch) and if files inside the Fedora-43 directory
@@ -24,4 +24,7 @@ jobs:
       uses: ./.github/workflows/build-image.yaml
       with:
         image_base_name: "Fedora-43"
+        image_suffix: "-aarch64"
         sub_images: "build test dev"
+        runs_on: "ubuntu-24.04-arm"
+        target_platform: "linux/arm64"
