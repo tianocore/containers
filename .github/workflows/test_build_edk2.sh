@@ -25,18 +25,20 @@ fi
 #   run into the python tar bug.
 rm -f BaseTools/Bin/gcc_aarch64_linux_ext_dep.yaml
 
+python -m venv .venv
+. .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install --upgrade -r pip-requirements.txt
 
 stuart_setup -c .pytool/CISettings.py
 stuart_update -c .pytool/CISettings.py
 
-python BaseTools/Edk2ToolsBuild.py -t GCC5
+python BaseTools/Edk2ToolsBuild.py -t GCC
 
 build_step() {
   build=$1
   arch=$2
-  opts="TOOL_CHAIN_TAG=GCC5"
+  opts="TOOL_CHAIN_TAG=GCC"
   echo "-----------------------------------------------------------------------"
   echo "Building ${build} for ${arch}"
   echo "-----------------------------------------------------------------------"
