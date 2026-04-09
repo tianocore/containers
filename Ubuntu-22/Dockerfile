@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# Copyright (c) 2023-2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 
 # Build ubuntu22-based container images for use when building EDK2:
@@ -16,7 +16,7 @@
 FROM ubuntu:22.04 AS build
 
 # Set the EDKREPO URL (and version)
-ENV EDKREPO_URL=https://github.com/tianocore/edk2-edkrepo/releases/download/edkrepo-v2.1.2/edkrepo-2.1.2.tar.gz
+ENV EDKREPO_URL=https://github.com/tianocore/edk2-edkrepo/releases/download/edkrepo-v3.2.4/edkrepo-3.2.4.0.tar.gz
 
 # Suppresses a debconf error during apt-get install.
 ENV DEBIAN_FRONTEND=noninteractive
@@ -136,7 +136,7 @@ ENV LC_ALL en_US.UTF-8
 RUN mkdir /edkrepo_install && \
     cd /edkrepo_install && \
     wget -O- ${EDKREPO_URL} | tar zxvf - && \
-    ./install.py --no-prompt --user $(id -nu) && \
+    ./install.py --no-prompt --user $(id -nu) --system && \
     mkdir -p /etc/edkrepo_skel && \
     cp -R /root/.edkrepo /etc/edkrepo_skel && \
     rm -rf /edkrepo_install
