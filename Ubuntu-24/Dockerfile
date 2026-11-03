@@ -46,8 +46,7 @@ RUN \
         ca-certificates \
         python3.12 python3-pip python3-venv python3-dev virtualenv \
         g++-${GCC_MAJOR_VERSION} gcc-${GCC_MAJOR_VERSION} \
-        g++-${GCC_MAJOR_VERSION}-x86-64-linux-gnux32 gcc-${GCC_MAJOR_VERSION}-x86-64-linux-gnux32 \
-        llvm-20 clang-20 lld-20 libclang-rt-20-dev && \
+        g++-${GCC_MAJOR_VERSION}-x86-64-linux-gnux32 gcc-${GCC_MAJOR_VERSION}-x86-64-linux-gnux32 && \
     apt-get install --yes --no-install-recommends \
         gcc-multilib g++-multilib libx11-dev libx11-6 libxext6 libxext-dev \
         libc6-i386 libc6-dev-i386 libxext6:i386 libxext-dev:i386 linux-libc-dev:i386 && \
@@ -55,6 +54,16 @@ RUN \
         g++-${GCC_MAJOR_VERSION}-aarch64-linux-gnu gcc-${GCC_MAJOR_VERSION}-aarch64-linux-gnu \
         g++-${GCC_MAJOR_VERSION}-riscv64-linux-gnu gcc-${GCC_MAJOR_VERSION}-riscv64-linux-gnu \
         g++-${GCC_MAJOR_VERSION}-loongarch64-linux-gnu gcc-${GCC_MAJOR_VERSION}-loongarch64-linux-gnu && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN \
+    wget -q https://apt.llvm.org/llvm.sh && \
+    chmod +x llvm.sh && \
+    ./llvm.sh 22 && \
+    apt-get update && \
+    apt-get install --yes --no-install-recommends \
+        clang-22 clang-tools-22 clangd-22 lld-22 llvm-22 llvm-22-dev libclang-rt-22-dev && \
+    rm -f llvm.sh && \
     rm -rf /var/lib/apt/lists/*
 
 RUN \
@@ -92,7 +101,7 @@ RUN \
       --slave /usr/bin/loongarch64-linux-gnu-gcc-ranlib loongarch64-linux-gnu-gcc-ranlib /usr/bin/loongarch64-linux-gnu-gcc-ranlib-${GCC_MAJOR_VERSION}
 
 # Add clang/llvm to PATH
-ENV PATH=/usr/lib/llvm-20/bin:$PATH
+ENV PATH=/usr/lib/llvm-22/bin:$PATH
 
 # Set toolchains prefix
 ENV GCC_AARCH64_PREFIX=/usr/bin/aarch64-linux-gnu-
