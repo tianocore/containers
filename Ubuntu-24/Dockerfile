@@ -53,7 +53,8 @@ RUN \
         libc6-i386 libc6-dev-i386 libxext6:i386 libxext-dev:i386 linux-libc-dev:i386 && \
     apt-get install --yes --no-install-recommends \
         g++-${GCC_MAJOR_VERSION}-aarch64-linux-gnu gcc-${GCC_MAJOR_VERSION}-aarch64-linux-gnu \
-        g++-${GCC_MAJOR_VERSION}-riscv64-linux-gnu gcc-${GCC_MAJOR_VERSION}-riscv64-linux-gnu && \
+        g++-${GCC_MAJOR_VERSION}-riscv64-linux-gnu gcc-${GCC_MAJOR_VERSION}-riscv64-linux-gnu \
+        g++-${GCC_MAJOR_VERSION}-loongarch64-linux-gnu gcc-${GCC_MAJOR_VERSION}-loongarch64-linux-gnu && \
     rm -rf /var/lib/apt/lists/*
 
 RUN \
@@ -82,7 +83,13 @@ RUN \
       --slave /usr/bin/riscv64-linux-gnu-g++ riscv64-linux-gnu-g++ /usr/bin/riscv64-linux-gnu-g++-${GCC_MAJOR_VERSION} \
       --slave /usr/bin/riscv64-linux-gnu-gcc-ar riscv64-linux-gnu-gcc-ar /usr/bin/riscv64-linux-gnu-gcc-ar-${GCC_MAJOR_VERSION} \
       --slave /usr/bin/riscv64-linux-gnu-gcc-nm riscv64-linux-gnu-gcc-nm /usr/bin/riscv64-linux-gnu-gcc-nm-${GCC_MAJOR_VERSION} \
-      --slave /usr/bin/riscv64-linux-gnu-gcc-ranlib riscv64-linux-gnu-gcc-ranlib /usr/bin/riscv64-linux-gnu-gcc-ranlib-${GCC_MAJOR_VERSION}
+      --slave /usr/bin/riscv64-linux-gnu-gcc-ranlib riscv64-linux-gnu-gcc-ranlib /usr/bin/riscv64-linux-gnu-gcc-ranlib-${GCC_MAJOR_VERSION} && \
+    update-alternatives \
+      --install /usr/bin/loongarch64-linux-gnu-gcc loongarch64-linux-gnu-gcc /usr/bin/loongarch64-linux-gnu-gcc-${GCC_MAJOR_VERSION} 100 \
+      --slave /usr/bin/loongarch64-linux-gnu-g++ loongarch64-linux-gnu-g++ /usr/bin/loongarch64-linux-gnu-g++-${GCC_MAJOR_VERSION} \
+      --slave /usr/bin/loongarch64-linux-gnu-gcc-ar loongarch64-linux-gnu-gcc-ar /usr/bin/loongarch64-linux-gnu-gcc-ar-${GCC_MAJOR_VERSION} \
+      --slave /usr/bin/loongarch64-linux-gnu-gcc-nm loongarch64-linux-gnu-gcc-nm /usr/bin/loongarch64-linux-gnu-gcc-nm-${GCC_MAJOR_VERSION} \
+      --slave /usr/bin/loongarch64-linux-gnu-gcc-ranlib loongarch64-linux-gnu-gcc-ranlib /usr/bin/loongarch64-linux-gnu-gcc-ranlib-${GCC_MAJOR_VERSION}
 
 # Add clang/llvm to PATH
 ENV PATH=/usr/lib/llvm-20/bin:$PATH
@@ -90,8 +97,10 @@ ENV PATH=/usr/lib/llvm-20/bin:$PATH
 # Set toolchains prefix
 ENV GCC_AARCH64_PREFIX=/usr/bin/aarch64-linux-gnu-
 ENV GCC_RISCV64_PREFIX=/usr/bin/riscv64-linux-gnu-
+ENV GCC_LOONGARCH64_PREFIX=/usr/bin/loongarch64-linux-gnu-
 ENV GCCNOLTO_AARCH64_PREFIX=/usr/bin/aarch64-linux-gnu-
 ENV GCCNOLTO_RISCV64_PREFIX=/usr/bin/riscv64-linux-gnu-
+ENV GCCNOLTO_LOONGARCH64_PREFIX=/usr/bin/loongarch64-linux-gnu-
 
 # Set the locale
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
@@ -125,7 +134,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     mkdir -p qemu-build && cd qemu-build && \
     wget  "${QEMU_URL}" && \
     tar -xf qemu-9.1.1.tar.xz --strip-components=1 && \
-    ./configure --target-list=x86_64-softmmu,aarch64-softmmu,riscv64-linux-user,riscv64-softmmu && \
+    ./configure --target-list=x86_64-softmmu,aarch64-softmmu,riscv64-linux-user,riscv64-softmmu,loongarch64-linux-user,loongarch64-softmmu && \
     make install -j $(nproc) && \
     cd .. && \
     rm -rf qemu-build && \
