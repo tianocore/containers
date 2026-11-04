@@ -1,0 +1,30 @@
+# GitHub Action Workflow for building the Fedora 45 AArch64 images.
+
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+
+name: "Fedora 45 AArch64 Images"
+
+# This workflow only runs (on the main branch or on PRs targeted
+# at the main branch) and if files inside the Fedora-45 directory
+# have been modifed/added/removed...
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'Fedora-45/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'Fedora-45/**'
+
+jobs:
+  Build_Image:
+      uses: ./.github/workflows/build-image.yaml
+      with:
+        image_base_name: "Fedora-45"
+        image_suffix: "-aarch64"
+        sub_images: "build test dev"
+        runs_on: "ubuntu-24.04-arm"
+        target_platform: "linux/arm64"
