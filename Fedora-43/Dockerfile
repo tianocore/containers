@@ -2,6 +2,7 @@
 #
 # Copyright (C) 2025, Red Hat, Inc.
 # Copyright (c) 2025, Mike Beaton <mjsbeaton@gmail.com>.
+# Copyright (c) 2026 Loongson Technology Corporation Limited. All rights reserved.
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
 # This file contains the definitions for images to be used for different
@@ -16,7 +17,8 @@
 # This image is intended for jobs that compile the source code and as a general
 # purpose image. It contains the toolchains for all supported architectures, and
 # all build dependencies.
-FROM registry.fedoraproject.org/fedora:43 AS build
+ARG TARGETARCH
+FROM registry.fedoraproject.org/fedora:43 AS build-common
 
 ARG CSPELL_VERSION=9.3.0
 ARG MARKDOWNLINT_VERSION=0.44.0
@@ -91,26 +93,32 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --upgrade pip lcov_cobertura setuptools
 
 # Set toolchains prefix
-ENV GCC_X64_PREFIX=/usr/bin/x86_64-linux-gnu-
-ENV GCC_AARCH64_PREFIX=/usr/bin/aarch64-linux-gnu-
 ENV GCC_ARM_PREFIX=/usr/bin/arm-linux-gnu-
 ENV GCC_RISCV64_PREFIX=/usr/bin/riscv64-linux-gnu-
 ENV GCC_LOONGARCH64_PREFIX=/usr/bin/loongarch64-linux-gnu-
 # - Also set GCC5, which is deprecated, but still in use.
-ENV GCC5_X64_PREFIX=/usr/bin/x86_64-linux-gnu-
-ENV GCC5_AARCH64_PREFIX=/usr/bin/aarch64-linux-gnu-
 ENV GCC5_ARM_PREFIX=/usr/bin/arm-linux-gnu-
 ENV GCC5_RISCV64_PREFIX=/usr/bin/riscv64-linux-gnu-
 ENV GCC5_LOONGARCH64_PREFIX=/usr/bin/loongarch64-linux-gnu-
-# Set additional prefixes required by OvmfPkg
-ENV GCC_BIN=/usr/bin/x86_64-linux-gnu-
-ENV GCC5_BIN=/usr/bin/x86_64-linux-gnu-
 
 # Tools used by build extensions.
 RUN --mount=type=cache,target=/root/.npm \
     npm install -g npm \
       cspell@${CSPELL_VERSION} \
       markdownlint-cli@${MARKDOWNLINT_VERSION}
+
+FROM build-common AS build-amd64
+ENV GCC_AARCH64_PREFIX=/usr/bin/aarch64-linux-gnu-
+ENV GCC5_AARCH64_PREFIX=/usr/bin/aarch64-linux-gnu-
+
+FROM build-common AS build-arm64
+ENV GCC_X64_PREFIX=/usr/bin/x86_64-linux-gnu-
+ENV GCC5_X64_PREFIX=/usr/bin/x86_64-linux-gnu-
+ENV GCC_BIN=/usr/bin/x86_64-linux-gnu-
+ENV GCC5_BIN=/usr/bin/x86_64-linux-gnu-
+
+# Select the configuration according to the target architecture.
+FROM build-${TARGETARCH} AS build
 
 # Test Image
 # This image is intended for jobs that run tests (and possibly also build)
