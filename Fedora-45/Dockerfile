@@ -17,7 +17,8 @@
 # This image is intended for jobs that compile the source code and as a general
 # purpose image. It contains the toolchains for all supported architectures, and
 # all build dependencies.
-FROM registry.fedoraproject.org/fedora:45 AS build
+ARG TARGETARCH
+FROM registry.fedoraproject.org/fedora:45 AS build-common
 
 ARG CSPELL_VERSION=10.3.6
 ARG MARKDOWNLINT_VERSION=0.49.1
@@ -92,19 +93,25 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --upgrade pip lcov_cobertura setuptools
 
 # Set toolchains prefix
-ENV GCC_X64_PREFIX=/usr/bin/x86_64-linux-gnu-
-ENV GCC_AARCH64_PREFIX=/usr/bin/aarch64-linux-gnu-
 ENV GCC_ARM_PREFIX=/usr/bin/arm-linux-gnu-
 ENV GCC_RISCV64_PREFIX=/usr/bin/riscv64-linux-gnu-
 ENV GCC_LOONGARCH64_PREFIX=/usr/bin/loongarch64-linux-gnu-
-# Set additional prefixes required by OvmfPkg
-ENV GCC_BIN=/usr/bin/x86_64-linux-gnu-
 
 # Tools used by build extensions.
 RUN --mount=type=cache,target=/root/.npm \
     npm install -g npm \
       cspell@${CSPELL_VERSION} \
       markdownlint-cli@${MARKDOWNLINT_VERSION}
+
+FROM build-common AS build-amd64
+ENV GCC_AARCH64_PREFIX=/usr/bin/aarch64-linux-gnu-
+
+FROM build-common AS build-arm64
+ENV GCC_X64_PREFIX=/usr/bin/x86_64-linux-gnu-
+ENV GCC_BIN=/usr/bin/x86_64-linux-gnu-
+
+# Select the configuration according to the target architecture.
+FROM build-${TARGETARCH} AS build
 
 # Test Image
 # This image is intended for jobs that run tests (and possibly also build)
